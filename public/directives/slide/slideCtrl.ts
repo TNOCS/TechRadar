@@ -1,4 +1,5 @@
 module Slide {
+    import ISpreadsheetRow = csComp.Services.ISpreadsheetRow;
 
     export interface ISlideScope extends ng.IScope {
         vm: SlideCtrl;
@@ -29,8 +30,16 @@ module Slide {
 
             this.table = 'Hello';
 
-
+            busService.subscribe('spreadsheet', (title, spreadsheet) => {
+                if (title !== 'newSheet') return;
+                this.showSheet(spreadsheet);
+            });
         }
 
+        private showSheet(spreadsheet: ISpreadsheetRow[]) {
+            this.table = JSON.stringify(spreadsheet);
+
+            if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
+        }
     }
 }

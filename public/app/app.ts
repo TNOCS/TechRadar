@@ -1,11 +1,15 @@
 module App {
     'use strict';
 
+    import ISpreadsheetRow = csComp.Services.ISpreadsheetRow;
+
     export interface IAppScope extends ng.IScope {
         vm: AppCtrl;
     }
 
     export class AppCtrl {
+        private public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true';
+
         // It provides $injector with information about dependencies to be injected into constructor
         // it is better to have it close to the constructor, because the parameters must match in count and type.
         // See http://docs.angularjs.org/guide/di
@@ -18,11 +22,30 @@ module App {
         // dependencies are injected via AngularJS $injector
         // controller's name is registered in Application.ts and specified from ng-controller attribute in index.html
         constructor(
-            private $scope       : IAppScope,
-            private busService   : csComp.Services.MessageBusService,
-            private sheetService : csComp.Services.SheetService
+            private $scope             : IAppScope,
+            private busService         : csComp.Services.MessageBusService,
+            private spreadsheetService : csComp.Services.SpreadsheetService
             ) {
             $scope.vm = this;
+
+            spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
+                this.showInfo(spreadsheet);
+                busService.publish('spreadsheet', 'newSheet', spreadsheet);
+            });
+        }
+
+        /**
+         * Show info that is obtained from the Google sheet.
+         */
+        private showInfo(spreadsheet: ISpreadsheetRow[]) {
+            var index = 1;
+            spreadsheet.forEach((row) => {
+                console.log('Row ' + index++);
+                for (var header in row) {
+                    if (!row.hasOwnProperty(header)) continue;
+                    console.log(header + ': ' + row[header]);
+                }
+            });
         }
     }
 
@@ -71,7 +94,7 @@ module App {
         //             sticky: true
         //         });
         // })
-        .service('sheetService', csComp.Services.SheetService)
+        .service('sheetService', csComp.Services.SpreadsheetService)
         .service('busService', csComp.Services.MessageBusService)
         .controller('appCtrl', AppCtrl);
 

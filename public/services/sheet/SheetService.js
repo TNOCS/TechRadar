@@ -2,26 +2,19 @@ var csComp;
 (function (csComp) {
     var Services;
     (function (Services) {
-        var SheetService = (function () {
-            function SheetService() {
-                this.public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true';
-                this.loadSheet(this.public_spreadsheet_url);
+        var SpreadsheetService = (function () {
+            function SpreadsheetService() {
             }
-            SheetService.prototype.loadSheet = function (url) {
-                var _this = this;
+            SpreadsheetService.prototype.loadSheet = function (url, callback) {
                 console.log('Initializing tabletop');
                 Tabletop.init({
                     key: url,
-                    callback: function (data) { return _this.showInfo(data); },
+                    callback: callback,
                     simpleSheet: true
                 });
             };
-            SheetService.prototype.showInfo = function (data) {
-                var table = JSON.stringify(data);
-                console.log(table);
-            };
-            return SheetService;
+            return SpreadsheetService;
         })();
-        Services.SheetService = SheetService;
+        Services.SpreadsheetService = SpreadsheetService;
     })(Services = csComp.Services || (csComp.Services = {}));
 })(csComp || (csComp = {}));
