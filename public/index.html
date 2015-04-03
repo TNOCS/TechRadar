@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" />
         <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="bower_components\pnotify\pnotify.core.css" />
 
         <link rel="stylesheet" href="css/style.css">
 
@@ -59,25 +60,6 @@
               Slide layout
 
               <infoSlide></infoSlide>
-              <!-- <p id="data"></p> -->
-
-<!-- <script type="text/javascript" src="./includes/js/tabletop.js"></script>
-<script type="text/javascript">
-  window.onload = function() { init() };
-  //var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Vmj7tj64bz1cFRnbCJCAAXufonxIVOKqhZDTfPOvFTU/pubhtml';
-  var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true';
-  function init() {
-    Tabletop.init( { key: public_spreadsheet_url,
-                     callback: showInfo,
-                     simpleSheet: true } );
-  }
-  function showInfo(data) {
-    // data comes through as a simple array since simpleSheet is turned on
-    document.getElementById("data").innerHTML = JSON.stringify(data);
-    console.log(data);
-  }
-  document.write("The published spreadsheet is located at <a target='_new' href='" + public_spreadsheet_url + "'>" + public_spreadsheet_url + "</a>");
-</script> -->
 
           </div>
 
@@ -90,12 +72,17 @@
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="bower_components\pnotify\pnotify.core.js"></script>
         <script src="./includes/js/tabletop.js"></script>
         <!--<script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="bower_components/angular-translate/angular-translate.min.js"></script>
         <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>-->
 
+        <script src="./services/sheet/SheetService.js"></script>
+        <script src="./services/bus/MessageBus.js"></script>
+        <script src="./services/sheet/sheetService.js"></script>
         <script src="./directives/slide/slide.tpl.js"></script>
         <script src="./directives/slide/slideCtrl.js"></script>
         <script src="./directives/slide/slide.js"></script>

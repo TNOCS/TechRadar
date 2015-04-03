@@ -2,12 +2,16 @@ var App;
 (function (App) {
     'use strict';
     var AppCtrl = (function () {
-        function AppCtrl($scope) {
+        function AppCtrl($scope, busService, sheetService) {
             this.$scope = $scope;
+            this.busService = busService;
+            this.sheetService = sheetService;
             $scope.vm = this;
         }
         AppCtrl.$inject = [
-            '$scope'
+            '$scope',
+            'busService',
+            'sheetService'
         ];
         return AppCtrl;
     })();
@@ -16,5 +20,7 @@ var App;
         'ui.bootstrap',
         'techRadar.infoslide'
     ])
+        .service('sheetService', csComp.Services.SheetService)
+        .service('busService', csComp.Services.MessageBusService)
         .controller('appCtrl', AppCtrl);
 })(App || (App = {}));

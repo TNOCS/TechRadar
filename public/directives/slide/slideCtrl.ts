@@ -1,5 +1,4 @@
 module Slide {
-    declare var Tabletop;
 
     export interface ISlideScope extends ng.IScope {
         vm: SlideCtrl;
@@ -16,39 +15,22 @@ module Slide {
         // it is better to have it close to the constructor, because the parameters must match in count and type.
         // See http://docs.angularjs.org/guide/di
         public static $inject = [
-            '$scope'
+            '$scope',
+            'busService'
         ];
 
         // dependencies are injected via AngularJS $injector
         // controller's name is registered in Application.ts and specified from ng-controller attribute in index.html
         constructor(
-            private $scope: ISlideScope
+            private $scope     : ISlideScope,
+            private busService : csComp.Services.MessageBusService
             ) {
             $scope.vm = this;
 
-            this.init();
             this.table = 'Hello';
+
+
         }
 
-        private init() {
-            console.log('Initializing tabletop');
-            Tabletop.init({
-                key: this.public_spreadsheet_url,
-                callback: (data: Object) => this.showInfo(data),
-                simpleSheet: true
-            });
-        }
-
-        /**
-         * show info that is obtained from the Google sheet.
-         */
-        private showInfo(data: Object) {
-            //alert(data);
-            var table = JSON.stringify(data);
-            this.table = table;
-            if (this.$scope.$$phase != '$apply' && this.$scope.$$phase != '$digest') { this.$scope.$apply(); }
-
-            console.log(table);
-        }
     }
 }

@@ -10,13 +10,17 @@ module App {
         // it is better to have it close to the constructor, because the parameters must match in count and type.
         // See http://docs.angularjs.org/guide/di
         static $inject = [
-            '$scope'
+            '$scope',
+            'busService',
+            'sheetService'
         ];
 
         // dependencies are injected via AngularJS $injector
         // controller's name is registered in Application.ts and specified from ng-controller attribute in index.html
         constructor(
-            private $scope: IAppScope
+            private $scope       : IAppScope,
+            private busService   : csComp.Services.MessageBusService,
+            private sheetService : csComp.Services.SheetService
             ) {
             $scope.vm = this;
         }
@@ -67,7 +71,8 @@ module App {
         //             sticky: true
         //         });
         // })
-        // .service('messageBusService', csComp.Services.MessageBusService)
+        .service('sheetService', csComp.Services.SheetService)
+        .service('busService', csComp.Services.MessageBusService)
         .controller('appCtrl', AppCtrl);
 
 }
