@@ -4,18 +4,22 @@
     font-weight: normal;
     src: url("../includes/ROsanswebtextregular.ttf") format("opentype");
 }
-
-html,
-body,
-#map {
+html, body, #map {
     font-family: ROSans;
     height: 100%;
     overflow: hidden;
     width: 100%;
 }
-
 html, body, #container {
     height: 100%;
     overflow: hidden;
     width: 100%;
+}
+body {
+    padding-top: 50px;
+}
+.starter-template {
+    background: lightgray;
+    padding: 20px 15px;
+    text-align: center;
 }

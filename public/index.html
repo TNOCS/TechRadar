@@ -10,12 +10,14 @@
 
         <title>Technology Radar</title>
 
+        <!-- build:css css/techradar.css -->
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" />
         <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="bower_components\pnotify\pnotify.core.css" />
 
         <link rel="stylesheet" href="css/style.css">
+        <!-- endbuild -->
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -45,12 +47,11 @@
           </div>
         </nav>
 
-        <div class="container">
+        <div class="starter-template">
+          <p class="lead">Situational Awareness Tools, now and future..</p>
+        </div>
 
-          <div class="starter-template">
-            <h1>Bootstrap starter template</h1>
-            <p class="lead">Situational Awareness Tools, now and future..</p>
-          </div>
+        <div class="container" style="padding: 10px 0 0 0">
 
           <div class="col-md-6">
               d3 radar
@@ -66,7 +67,7 @@
 
         </div><!-- /.container -->
 
-
+        <!-- build:js techradar.js -->
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="bower_components/angular/angular.min.js"></script>
@@ -83,11 +84,15 @@
         <script src="./services/sheet/SheetService.js"></script>
         <script src="./services/bus/MessageBus.js"></script>
         <script src="./services/sheet/sheetService.js"></script>
+
+        <script src="./directives/techRadar/techRadar.js"></script>
+
         <script src="./directives/slide/slide.tpl.js"></script>
         <script src="./directives/slide/slideCtrl.js"></script>
         <script src="./directives/slide/slide.js"></script>
 
         <script src="./app/app.js"></script>
+        <!-- endbuild -->
 
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
