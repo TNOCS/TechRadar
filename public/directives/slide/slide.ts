@@ -16,7 +16,7 @@ module Slide {
     }
 
     /**
-      * Directive to display the available map layers.
+      * Directive to display a slide of information.
       */
     myModule.directive('infoslide', [
         '$window', '$compile',

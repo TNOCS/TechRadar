@@ -5,17 +5,14 @@ var Slide;
             var _this = this;
             this.$scope = $scope;
             this.busService = busService;
-            this.public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true';
             $scope.vm = this;
-            this.table = 'Hello';
-            busService.subscribe('spreadsheet', function (title, spreadsheet) {
-                if (title !== 'newSheet')
+            busService.subscribe('slide', function (title, slide) {
+                if (title !== 'newSlide')
                     return;
-                _this.showSheet(spreadsheet);
+                _this.showSlide(slide);
             });
         }
-        SlideCtrl.prototype.showSheet = function (spreadsheet) {
-            this.table = JSON.stringify(spreadsheet);
+        SlideCtrl.prototype.showSlide = function (slide) {
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                 this.$scope.$apply();
             }

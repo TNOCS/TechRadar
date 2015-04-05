@@ -55,6 +55,7 @@
 
           <div class="col-md-6">
               d3 radar
+              <tech-radar-chart technologies="vm.technologies" width="600" height="600"></tech-radar-chart>
           </div>
 
           <div class="col-md-6">
@@ -74,7 +75,9 @@
         <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-        <script src="bower_components\pnotify\pnotify.core.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="bower_components/d3/d3.min.js"></script>
+        <script src="bower_components/pnotify/pnotify.core.js"></script>
         <script src="./includes/js/tabletop.js"></script>
         <!--<script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
@@ -85,8 +88,11 @@
         <script src="./services/bus/MessageBus.js"></script>
         <script src="./services/sheet/sheetService.js"></script>
 
+        <script src="./directives/techRadar/technology.js"></script>
+        <script src="./directives/techRadar/techRadarCtrl.js"></script>
         <script src="./directives/techRadar/techRadar.js"></script>
 
+        <script src="./directives/slide/infoSlide.js"></script>
         <script src="./directives/slide/slide.tpl.js"></script>
         <script src="./directives/slide/slideCtrl.js"></script>
         <script src="./directives/slide/slide.js"></script>

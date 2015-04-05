@@ -2,6 +2,7 @@ module App {
     'use strict';
 
     import ISpreadsheetRow = csComp.Services.ISpreadsheetRow;
+    import Technology      = TechRadar.Technology;
 
     export interface IAppScope extends ng.IScope {
         vm: AppCtrl;
@@ -9,6 +10,7 @@ module App {
 
     export class AppCtrl {
         private public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true';
+        private technologies: Technology[];
 
         // It provides $injector with information about dependencies to be injected into constructor
         // it is better to have it close to the constructor, because the parameters must match in count and type.
@@ -29,8 +31,19 @@ module App {
             $scope.vm = this;
 
             spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
-                this.showInfo(spreadsheet);
-                busService.publish('spreadsheet', 'newSheet', spreadsheet);
+                //this.showInfo(spreadsheet);
+                //busService.publish('spreadsheet', 'newSheet', spreadsheet);
+
+                this.technologies = [];
+                spreadsheet.forEach((row) => {
+                    console.log(row.Category);
+                    console.log(row.Title);
+
+                    var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, 1, row.ShortTitle, row.Title, row.SubTitle, row.Text, row.Media);
+                    this.technologies.push(technology);
+                    //var technology = row.
+                });
+                if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
             });
         }
 
@@ -54,7 +67,8 @@ module App {
             // 'ngSanitize',
             // 'ui.router',
             'ui.bootstrap',
-            'techRadar.infoslide'
+            'techRadar.infoslide',
+            'techRadar.techRadarChart'
             // 'LocalStorageModule',
             // 'pascalprecht.translate',
         ])

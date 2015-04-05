@@ -7,9 +7,6 @@ module Slide {
 
     export class SlideCtrl {
         private scope: ISlideScope;
-        private public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true';
-
-        public table: any;
 
         // $inject annotation.
         // It provides $injector with information about dependencies to be injected into constructor
@@ -28,16 +25,13 @@ module Slide {
             ) {
             $scope.vm = this;
 
-            this.table = 'Hello';
-
-            busService.subscribe('spreadsheet', (title, spreadsheet) => {
-                if (title !== 'newSheet') return;
-                this.showSheet(spreadsheet);
+            busService.subscribe('slide', (title, slide) => {
+                if (title !== 'newSlide') return;
+                this.showSlide(slide);
             });
         }
 
-        private showSheet(spreadsheet: ISpreadsheetRow[]) {
-            this.table = JSON.stringify(spreadsheet);
+        private showSlide(slide: ISpreadsheetRow) {
 
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
         }
