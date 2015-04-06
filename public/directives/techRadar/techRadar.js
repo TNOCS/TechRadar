@@ -71,7 +71,6 @@ var TechRadar;
                         console.log(categories);
                         console.log(periods);
                         console.log(periodCounts);
-                        var radarRings = [];
                         var totalTech = technologies.length;
                         var curRadius = 0;
                         var index = 0;
@@ -90,18 +89,11 @@ var TechRadar;
                             chart.append("path")
                                 .attr("d", arc)
                                 .attr("fill", color(index++));
+                            chart.append("text")
+                                .attr("transform", function (d) { return "translate(" + (curRadius - 10) + ", -5)"; })
+                                .attr("text-anchor", "end")
+                                .text(period);
                         });
-                        chart.data([radarRings]);
-                        var arc = d3.svg.arc().outerRadius(outerRadius);
-                        var pie = d3.layout.pie();
-                        console.log('Technologies: ');
-                        console.log(scope.technologies);
-                        chart.append("text")
-                            .attr("x", 100)
-                            .attr("y", 100)
-                            .attr("dy", ".35em")
-                            .style("text-anchor", "end")
-                            .text('Hello world');
                     };
                     scope.$watch('technologies', function (newVal, oldVal) {
                         if (newVal !== oldVal)
