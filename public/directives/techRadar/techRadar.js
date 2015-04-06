@@ -9,12 +9,6 @@ var TechRadar;
     catch (err) {
         TechRadar.myModule = angular.module(moduleName, []);
     }
-    var RadarRing = (function () {
-        function RadarRing() {
-        }
-        return RadarRing;
-    })();
-    TechRadar.RadarRing = RadarRing;
     var RadarSection = (function () {
         function RadarSection() {
         }
@@ -27,25 +21,24 @@ var TechRadar;
             return {
                 terminal: true,
                 restrict: 'EA',
+                transclude: true,
                 scope: {
                     technologies: '=',
-                    startAngle: '@',
-                    endAngle: '@',
-                    width: '@',
-                    height: '@',
+                    startangle: '@',
+                    endangle: '@',
+                    radius: '@',
                     margin: '@'
                 },
                 controller: TechRadar.TechRadarCtrl,
                 link: function (scope, element, attrs) {
-                    var margin = scope.margin || { top: 15, right: 5, bottom: 0, left: 10 };
-                    var width = scope.width || 100;
-                    var height = scope.height || 70;
-                    var startAngle = scope.startAngle || -Math.PI / 2;
-                    var endAngle = scope.endAngle || Math.PI / 2;
+                    var rad2deg = 180 / Math.PI;
+                    var padding = scope.padding || { top: 15, right: 5, bottom: 0, left: 10 };
+                    var outerRadius = scope.radius || 100;
+                    var startAngle = scope.startangle ? scope.startangle / rad2deg : -Math.PI / 2;
+                    var endAngle = scope.endangle ? scope.endangle / rad2deg : Math.PI / 2;
                     var cursorTextHeight = 12;
-                    var actualWidth = width - margin.left - margin.right;
-                    var actualHeight = height - margin.top - margin.bottom;
-                    var outerRadius = Math.min(actualWidth, actualHeight) / 2;
+                    var actualWidth = 2 * outerRadius + padding.left + padding.right;
+                    var actualHeight = 2 * outerRadius + padding.top + padding.bottom;
                     var chart = d3.select(element[0])
                         .append('svg:svg')
                         .attr('width', actualWidth)
@@ -55,11 +48,17 @@ var TechRadar;
                     scope.render = function (technologies) {
                         var color = d3.scale.category20c();
                         var categories = [];
+                        var categoryCounts = {};
                         var periods = [];
                         var periodCounts = {};
                         technologies.forEach(function (t) {
-                            if (categories.indexOf(t.category) < 0)
+                            if (categories.indexOf(t.category) < 0) {
                                 categories.push(t.category);
+                                categoryCounts[t.category] = 1;
+                            }
+                            else {
+                                categoryCounts[t.category]++;
+                            }
                             if (periods.indexOf(t.timePeriod) < 0) {
                                 periods.push(t.timePeriod);
                                 periodCounts[t.timePeriod] = 1;
@@ -77,13 +76,11 @@ var TechRadar;
                         var curCount = 0;
                         periods.forEach(function (period) {
                             curCount += periodCounts[period];
-                            var radarRing = new RadarRing();
-                            radarRing.title = period;
-                            radarRing.innerRadius = curRadius;
-                            radarRing.outerRadius = curRadius = outerRadius * curCount / totalTech;
+                            var innerR = curRadius;
+                            var outerR = curRadius = outerRadius * curCount / totalTech;
                             var arc = d3.svg.arc()
-                                .innerRadius(radarRing.innerRadius)
-                                .outerRadius(radarRing.outerRadius)
+                                .innerRadius(innerR)
+                                .outerRadius(outerR)
                                 .startAngle(startAngle)
                                 .endAngle(endAngle);
                             chart.append("path")
@@ -93,6 +90,44 @@ var TechRadar;
                                 .attr("transform", function (d) { return "translate(" + (curRadius - 10) + ", -5)"; })
                                 .attr("text-anchor", "end")
                                 .text(period);
+                        });
+                        var curAngle = startAngle;
+                        var totAngle = endAngle - startAngle;
+                        categories.forEach(function (category) {
+                            if (curAngle < 0) {
+                                chart.append("text")
+                                    .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5) + 5) + "," + (-Math.cos(curAngle) * (outerRadius - 5) - 5) + ")" +
+                                    "rotate(" + (90 + curAngle * rad2deg) + ")")
+                                    .attr("text-anchor", "start")
+                                    .text(category);
+                            }
+                            else {
+                                chart.append("text")
+                                    .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5) - 5) + "," + (-Math.cos(curAngle) * (outerRadius - 5) + 5) + ")" +
+                                    "rotate(" + (-90 + curAngle * rad2deg) + ")")
+                                    .attr("dy", "1.2em")
+                                    .attr("text-anchor", "end")
+                                    .text(category);
+                            }
+                            var x1 = +Math.sin(curAngle) * outerRadius;
+                            var y1 = -Math.cos(curAngle) * outerRadius;
+                            curAngle += totAngle * categoryCounts[category] / totalTech;
+                            var x2 = +Math.sin(curAngle) * outerRadius;
+                            var y2 = -Math.cos(curAngle) * outerRadius;
+                            chart.append('line')
+                                .attr("x1", 0)
+                                .attr("y1", 0)
+                                .attr("x2", x1)
+                                .attr("y2", y1)
+                                .attr("stroke-width", 2)
+                                .attr("stroke", "black");
+                            chart.append('line')
+                                .attr("x1", 0)
+                                .attr("y1", 0)
+                                .attr("x2", x2)
+                                .attr("y2", y2)
+                                .attr("stroke-width", 2)
+                                .attr("stroke", "black");
                         });
                     };
                     scope.$watch('technologies', function (newVal, oldVal) {
