@@ -20,10 +20,24 @@ module TechRadar {
 
     export interface ITechRadarChartScope extends ng.IScope {
         technologies: Technology[];
+        startAngle? : number;
+        endAngle?   : number;
         width?      : number;
         height?     : number;
         margin?     : { top: number; right: number; bottom: number; left: number; };
         render(technologies: Technology[]): void;
+    }
+
+    export class RadarRing {
+        title      : string;
+        innerRadius: number;
+        outerRadius: number;
+    }
+
+    export class RadarSection {
+        title     : string;
+        startAngle: number;
+        endAngle  : number;
     }
 
     /**
@@ -41,6 +55,8 @@ module TechRadar {
                 restrict: 'EA',       // E = elements, other options are A=attributes and C=classes
                 scope: {
                     technologies: '=',  // = means that we use angular to evaluate the expression,
+                    startAngle  : '@',
+                    endAngle    : '@',
                     width       : '@',  // the value is used as is
                     height      : '@',
                     margin      : '@'
@@ -57,17 +73,26 @@ module TechRadar {
                 //    }
                 //],
                 link: function (scope: ITechRadarChartScope, element, attrs) {
-                    var margin           = scope.margin || { top: 15, right: 5, bottom: 0, left: 10 };
-                    var width            = scope.width || 100;
-                    var height           = scope.height || 70;
+                    var margin           = scope.margin     || { top: 15, right: 5, bottom: 0, left: 10 };
+                    var width            = scope.width      || 100;
+                    var height           = scope.height     || 70;
+                    var startAngle       = scope.startAngle || -Math.PI/2;
+                    var endAngle         = scope.endAngle   || Math.PI/2;
                     var cursorTextHeight = 12;// + (showAxis ? 5 : 0); // leave room for the cursor text (timestamp | measurement)
+
+                    var actualWidth  = width  - margin.left - margin.right;
+                    var actualHeight = height - margin.top  - margin.bottom;
+                    var outerRadius  = Math.min(actualWidth, actualHeight) / 2;
 
                     var chart = d3.select(element[0])
                         .append('svg:svg')
-                        .attr('width', width)
-                        .attr('height', height);
+                        .attr('width', actualWidth)
+                        .attr('height', actualHeight)
+                        .append("g")
+                        .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
 
                     scope.render = function(technologies: Technology[]) {
+                        var color = d3.scale.category20c();
 
                         var categories   : string[] = [];
                         var periods      : string[] = [];
@@ -86,6 +111,37 @@ module TechRadar {
                         console.log(categories);
                         console.log(periods);
                         console.log(periodCounts);
+
+                        // Draw the rings
+                        var radarRings: RadarRing[] = [];
+                        var totalTech   = technologies.length;
+                        var curRadius   = 0;
+                        var index       = 0;
+                        var curCount    = 0;
+                        periods.forEach((period) => {
+                            curCount += periodCounts[period];
+                            var radarRing = new RadarRing();
+                            radarRing.title       = period;
+                            radarRing.innerRadius = curRadius;
+                            radarRing.outerRadius = curRadius = outerRadius * curCount / totalTech;
+
+                            var arc = d3.svg.arc()
+                                .innerRadius(radarRing.innerRadius)
+                                .outerRadius(radarRing.outerRadius)
+                                .startAngle(startAngle) //converting from degs to radians
+                                .endAngle(endAngle) //just radians
+
+                            chart.append("path")
+                                .attr("d", arc)
+                                .attr("fill", color(index++));
+                        });
+
+                        chart.data([radarRings]);
+                        // declare an arc generator function
+                        var arc = d3.svg.arc().outerRadius(outerRadius);
+
+
+                        var pie = d3.layout.pie();
 
                         // var x = d3.scale.linear().range([margin.left + margin.left, width - margin.left - margin.right - margin.left - margin.right]);
                         // var y = d3.scale.linear().range([height - margin.bottom - margin.bottom, margin.top + margin.top + cursorTextHeight]);
