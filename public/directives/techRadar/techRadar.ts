@@ -88,7 +88,7 @@ module TechRadar {
                         var color = d3.scale.category20c();
 
                         var categories  : string[] = [];
-                        var categoryInfo: {
+                        var categoriesInfo: {
                             [category: string] : {
                                 count      : number;
                                 startAngle : number;
@@ -96,7 +96,7 @@ module TechRadar {
                             }
                         } = {};
                         var periods   : string[] = [];
-                        var periodInfo: {
+                        var periodsInfo: {
                             [period: string] : {
                                 count      : number;
                                 innerRadius: number;
@@ -107,21 +107,21 @@ module TechRadar {
                         technologies.forEach((t) => {
                             if (categories.indexOf(t.category) < 0) {
                                 categories.push(t.category);
-                                categoryInfo[t.category] = { count: 1, startAngle: 0, endAngle: 0, innerRadius: 0, outerRadius: 0 };
+                                categoriesInfo[t.category] = { count: 1, startAngle: 0, endAngle: 0, innerRadius: 0, outerRadius: 0 };
                             } else {
-                                categoryInfo[t.category].count++;
+                                categoriesInfo[t.category].count++;
                             }
                             if (periods.indexOf(t.timePeriod) < 0) {
                                 periods.push(t.timePeriod);
-                                periodInfo[t.timePeriod] = { count: 1, innerRadius: 0, outerRadius: 0 };
+                                periodsInfo[t.timePeriod] = { count: 1, innerRadius: 0, outerRadius: 0 };
                             } else {
-                                periodInfo[t.timePeriod].count++;
+                                periodsInfo[t.timePeriod].count++;
                             }
                         });
 
                         console.log(categories);
                         console.log(periods);
-                        console.log(periodInfo);
+                        console.log(periodsInfo);
 
                         // Draw the rings
                         var totalTech   = technologies.length;
@@ -129,12 +129,12 @@ module TechRadar {
                         var index       = 0;
                         var curCount    = 0;
                         periods.forEach((period) => {
-                            curCount += periodInfo[period].count;
+                            curCount += periodsInfo[period].count;
                             var innerR = curRadius;
                             var outerR = curRadius = innerRadius + (outerRadius - innerRadius) * curCount / totalTech;
 
-                            periodInfo[period].innerRadius = innerR;
-                            periodInfo[period].outerRadius = outerR;
+                            periodsInfo[period].innerRadius = innerR;
+                            periodsInfo[period].outerRadius = outerR;
 
                             var arc = d3.svg.arc()
                                 .innerRadius(innerR)
@@ -157,7 +157,7 @@ module TechRadar {
                         var totAngle = endAngle - startAngle;
 
                         categories.forEach((category) => {
-                            categoryInfo[category].startAngle = curAngle;
+                            categoriesInfo[category].startAngle = curAngle;
                             if (curAngle < 0) {
                                 chart.append("text")
                                     .attr("transform",
@@ -185,8 +185,8 @@ module TechRadar {
                                 .attr("y2", y1)
                                 .attr("stroke-width", 2)
                                 .attr("stroke", "black");
-                            curAngle += totAngle * categoryInfo[category].count / totalTech;
-                            categoryInfo[category].endAngle = curAngle;
+                            curAngle += totAngle * categoriesInfo[category].count / totalTech;
+                            categoriesInfo[category].endAngle = curAngle;
                             var x0 =  + Math.sin(curAngle)*innerRadius,
                                 y0 =  - Math.cos(curAngle)*innerRadius;
                             var x2 =  + Math.sin(curAngle)*outerRadius,
@@ -199,6 +199,31 @@ module TechRadar {
                                 .attr("stroke-width", 2)
                                 .attr("stroke", "black");
                         });
+
+                        // Draw the items
+                        chart.selectAll(".fa")
+                            .data(technologies)
+                            .enter().append("text")
+                            .attr("transform", function(t: Technology){
+                                var categoryInfo = categoriesInfo[t.category];
+                                var periodInfo   = periodsInfo[t.timePeriod];
+                                var angle  = categoryInfo.startAngle + Math.random() * (categoryInfo.endAngle - categoryInfo.startAngle);
+                                var radius = periodInfo.innerRadius + Math.random() * (periodInfo.outerRadius - periodInfo.innerRadius);
+                                var x = Math.sin(angle) * radius;
+                                var y = -Math.cos(angle) * radius;
+                                return "translate(" + x + "," + y + ")";})
+                            .attr('font-size', function(t: Technology) { return '2em'} )
+                            .attr('font-family', 'FontAwesome')
+                            .attr("text-anchor", "middle")
+                            .text(function(d) { return '\uf118' });
+                            // .attr("class", "dot fa fa-exclamation-triangle")
+                            // .attr("r", 3.5)
+                            // .attr("cx", function(d) { return 5 + 100 * Math.random(); })
+                            // .attr("cy", function(d) { return -5 + 100 * Math.random(); })
+                            // .style("fill", function(d) { return color(d.species); });                        // technologies.forEach((technology) => {
+                        //
+                        // });
+
                         // console.log('Technologies: ')
                         // console.log(scope.technologies);
                     };

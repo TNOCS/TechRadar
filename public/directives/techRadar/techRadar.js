@@ -50,38 +50,38 @@ var TechRadar;
                     scope.render = function (technologies) {
                         var color = d3.scale.category20c();
                         var categories = [];
-                        var categoryInfo = {};
+                        var categoriesInfo = {};
                         var periods = [];
-                        var periodInfo = {};
+                        var periodsInfo = {};
                         technologies.forEach(function (t) {
                             if (categories.indexOf(t.category) < 0) {
                                 categories.push(t.category);
-                                categoryInfo[t.category] = { count: 1, startAngle: 0, endAngle: 0, innerRadius: 0, outerRadius: 0 };
+                                categoriesInfo[t.category] = { count: 1, startAngle: 0, endAngle: 0, innerRadius: 0, outerRadius: 0 };
                             }
                             else {
-                                categoryInfo[t.category].count++;
+                                categoriesInfo[t.category].count++;
                             }
                             if (periods.indexOf(t.timePeriod) < 0) {
                                 periods.push(t.timePeriod);
-                                periodInfo[t.timePeriod] = { count: 1, innerRadius: 0, outerRadius: 0 };
+                                periodsInfo[t.timePeriod] = { count: 1, innerRadius: 0, outerRadius: 0 };
                             }
                             else {
-                                periodInfo[t.timePeriod].count++;
+                                periodsInfo[t.timePeriod].count++;
                             }
                         });
                         console.log(categories);
                         console.log(periods);
-                        console.log(periodInfo);
+                        console.log(periodsInfo);
                         var totalTech = technologies.length;
                         var curRadius = innerRadius;
                         var index = 0;
                         var curCount = 0;
                         periods.forEach(function (period) {
-                            curCount += periodInfo[period].count;
+                            curCount += periodsInfo[period].count;
                             var innerR = curRadius;
                             var outerR = curRadius = innerRadius + (outerRadius - innerRadius) * curCount / totalTech;
-                            periodInfo[period].innerRadius = innerR;
-                            periodInfo[period].outerRadius = outerR;
+                            periodsInfo[period].innerRadius = innerR;
+                            periodsInfo[period].outerRadius = outerR;
                             var arc = d3.svg.arc()
                                 .innerRadius(innerR)
                                 .outerRadius(outerR)
@@ -98,7 +98,7 @@ var TechRadar;
                         var curAngle = startAngle;
                         var totAngle = endAngle - startAngle;
                         categories.forEach(function (category) {
-                            categoryInfo[category].startAngle = curAngle;
+                            categoriesInfo[category].startAngle = curAngle;
                             if (curAngle < 0) {
                                 chart.append("text")
                                     .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5) + 5) + "," + (-Math.cos(curAngle) * (outerRadius - 5) - 5) + ")" +
@@ -123,8 +123,8 @@ var TechRadar;
                                 .attr("y2", y1)
                                 .attr("stroke-width", 2)
                                 .attr("stroke", "black");
-                            curAngle += totAngle * categoryInfo[category].count / totalTech;
-                            categoryInfo[category].endAngle = curAngle;
+                            curAngle += totAngle * categoriesInfo[category].count / totalTech;
+                            categoriesInfo[category].endAngle = curAngle;
                             var x0 = +Math.sin(curAngle) * innerRadius, y0 = -Math.cos(curAngle) * innerRadius;
                             var x2 = +Math.sin(curAngle) * outerRadius, y2 = -Math.cos(curAngle) * outerRadius;
                             chart.append('line')
@@ -135,6 +135,22 @@ var TechRadar;
                                 .attr("stroke-width", 2)
                                 .attr("stroke", "black");
                         });
+                        chart.selectAll(".fa")
+                            .data(technologies)
+                            .enter().append("text")
+                            .attr("transform", function (t) {
+                            var categoryInfo = categoriesInfo[t.category];
+                            var periodInfo = periodsInfo[t.timePeriod];
+                            var angle = categoryInfo.startAngle + Math.random() * (categoryInfo.endAngle - categoryInfo.startAngle);
+                            var radius = periodInfo.innerRadius + Math.random() * (periodInfo.outerRadius - periodInfo.innerRadius);
+                            var x = Math.sin(angle) * radius;
+                            var y = -Math.cos(angle) * radius;
+                            return "translate(" + x + "," + y + ")";
+                        })
+                            .attr('font-size', function (t) { return '2em'; })
+                            .attr('font-family', 'FontAwesome')
+                            .attr("text-anchor", "middle")
+                            .text(function (d) { return '\uf118'; });
                     };
                     scope.$watch('technologies', function (newVal, oldVal) {
                         if (newVal !== oldVal)
