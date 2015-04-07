@@ -27,6 +27,7 @@ var TechRadar;
                     startangle: '@',
                     endangle: '@',
                     radius: '@',
+                    innerradius: '@',
                     margin: '@'
                 },
                 controller: TechRadar.TechRadarCtrl,
@@ -34,6 +35,7 @@ var TechRadar;
                     var rad2deg = 180 / Math.PI;
                     var padding = scope.padding || { top: 15, right: 5, bottom: 0, left: 10 };
                     var outerRadius = scope.radius || 100;
+                    var innerRadius = scope.innerradius || 75;
                     var startAngle = scope.startangle ? scope.startangle / rad2deg : -Math.PI / 2;
                     var endAngle = scope.endangle ? scope.endangle / rad2deg : Math.PI / 2;
                     var cursorTextHeight = 12;
@@ -48,36 +50,38 @@ var TechRadar;
                     scope.render = function (technologies) {
                         var color = d3.scale.category20c();
                         var categories = [];
-                        var categoryCounts = {};
+                        var categoryInfo = {};
                         var periods = [];
-                        var periodCounts = {};
+                        var periodInfo = {};
                         technologies.forEach(function (t) {
                             if (categories.indexOf(t.category) < 0) {
                                 categories.push(t.category);
-                                categoryCounts[t.category] = 1;
+                                categoryInfo[t.category] = { count: 1, startAngle: 0, endAngle: 0, innerRadius: 0, outerRadius: 0 };
                             }
                             else {
-                                categoryCounts[t.category]++;
+                                categoryInfo[t.category].count++;
                             }
                             if (periods.indexOf(t.timePeriod) < 0) {
                                 periods.push(t.timePeriod);
-                                periodCounts[t.timePeriod] = 1;
+                                periodInfo[t.timePeriod] = { count: 1, innerRadius: 0, outerRadius: 0 };
                             }
                             else {
-                                periodCounts[t.timePeriod]++;
+                                periodInfo[t.timePeriod].count++;
                             }
                         });
                         console.log(categories);
                         console.log(periods);
-                        console.log(periodCounts);
+                        console.log(periodInfo);
                         var totalTech = technologies.length;
-                        var curRadius = 0;
+                        var curRadius = innerRadius;
                         var index = 0;
                         var curCount = 0;
                         periods.forEach(function (period) {
-                            curCount += periodCounts[period];
+                            curCount += periodInfo[period].count;
                             var innerR = curRadius;
-                            var outerR = curRadius = outerRadius * curCount / totalTech;
+                            var outerR = curRadius = innerRadius + (outerRadius - innerRadius) * curCount / totalTech;
+                            periodInfo[period].innerRadius = innerR;
+                            periodInfo[period].outerRadius = outerR;
                             var arc = d3.svg.arc()
                                 .innerRadius(innerR)
                                 .outerRadius(outerR)
@@ -94,6 +98,7 @@ var TechRadar;
                         var curAngle = startAngle;
                         var totAngle = endAngle - startAngle;
                         categories.forEach(function (category) {
+                            categoryInfo[category].startAngle = curAngle;
                             if (curAngle < 0) {
                                 chart.append("text")
                                     .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5) + 5) + "," + (-Math.cos(curAngle) * (outerRadius - 5) - 5) + ")" +
@@ -109,21 +114,22 @@ var TechRadar;
                                     .attr("text-anchor", "end")
                                     .text(category);
                             }
-                            var x1 = +Math.sin(curAngle) * outerRadius;
-                            var y1 = -Math.cos(curAngle) * outerRadius;
-                            curAngle += totAngle * categoryCounts[category] / totalTech;
-                            var x2 = +Math.sin(curAngle) * outerRadius;
-                            var y2 = -Math.cos(curAngle) * outerRadius;
+                            var x0 = +Math.sin(curAngle) * innerRadius, y0 = -Math.cos(curAngle) * innerRadius;
+                            var x1 = +Math.sin(curAngle) * outerRadius, y1 = -Math.cos(curAngle) * outerRadius;
                             chart.append('line')
-                                .attr("x1", 0)
-                                .attr("y1", 0)
+                                .attr("x1", x0)
+                                .attr("y1", y0)
                                 .attr("x2", x1)
                                 .attr("y2", y1)
                                 .attr("stroke-width", 2)
                                 .attr("stroke", "black");
+                            curAngle += totAngle * categoryInfo[category].count / totalTech;
+                            categoryInfo[category].endAngle = curAngle;
+                            var x0 = +Math.sin(curAngle) * innerRadius, y0 = -Math.cos(curAngle) * innerRadius;
+                            var x2 = +Math.sin(curAngle) * outerRadius, y2 = -Math.cos(curAngle) * outerRadius;
                             chart.append('line')
-                                .attr("x1", 0)
-                                .attr("y1", 0)
+                                .attr("x1", x0)
+                                .attr("y1", y0)
                                 .attr("x2", x2)
                                 .attr("y2", y2)
                                 .attr("stroke-width", 2)
