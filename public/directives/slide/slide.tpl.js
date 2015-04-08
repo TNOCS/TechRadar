@@ -1,4 +1,4 @@
-var Slide;
-(function (Slide) {
-    Slide.html = '<div>SLIDE PLACEHOLDER<br />{{vm.table}}</div>';
-})(Slide || (Slide = {}));
+var slide;
+(function (slide) {
+    slide.html = '<div class="slide">    <pre>        {{vm.technology}}    </pre></div>';
+})(slide || (slide = {}));

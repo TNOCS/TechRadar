@@ -1,12 +1,14 @@
 module Slide {
     import ISpreadsheetRow = csComp.Services.ISpreadsheetRow;
+    import Technology      = TechRadar.Technology;
 
     export interface ISlideScope extends ng.IScope {
         vm: SlideCtrl;
     }
 
     export class SlideCtrl {
-        private scope: ISlideScope;
+        private scope     : ISlideScope;
+        private technology: Technology;
 
         // $inject annotation.
         // It provides $injector with information about dependencies to be injected into constructor
@@ -25,6 +27,11 @@ module Slide {
             ) {
             $scope.vm = this;
 
+            busService.subscribe('technology', (title, technology: Technology) => {
+                if (title !== 'selected') return;
+                this.technology = technology;
+                if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
+            });
             busService.subscribe('slide', (title, slide) => {
                 if (title !== 'newSlide') return;
                 this.showSlide(slide);

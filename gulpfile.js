@@ -37,6 +37,22 @@ gulp.task('release-built', function() {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('convertTemplates2Ts', function() {
+    gulp.src('./**/*.tpl.html')
+        .pipe(plumber())
+        .pipe(cache('templates'))
+        .pipe(insert.prepend(function(file) {
+            var filename = file.path.substring(file.path.lastIndexOf('\\') + 1, file.path.lastIndexOf('.tpl.html'));
+            return 'module ' + filename + ' { export var html = \'';
+        }))
+        .pipe(insert.append('\'; }'))
+        .pipe(insert.transform(function(contents) {
+            return contents.replace(/(\r\n|\n|\r)/gm, "");
+        }))
+        .pipe(rename({ extname: '.ts' }))
+        .pipe(gulp.dest('./'));
+});
+
 // // JS hint task
 // gulp.task('lint', function() {
 //     gulp.src('./*.js')

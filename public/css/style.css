@@ -23,3 +23,12 @@ body {
     padding: 20px 15px;
     text-align: center;
 }
+.shortTitle {
+    fill: white;
+    font-size: 1em;
+}
+.shortTitle:hover {
+    stroke: yellow;
+    fill: yellow;
+    z-index: 100;
+}

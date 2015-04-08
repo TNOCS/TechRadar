@@ -15,7 +15,7 @@ var Slide;
                 terminal: false,
                 restrict: 'E',
                 scope: {},
-                template: Slide.html,
+                template: slide.html,
                 link: function (scope, element, attrs) {
                     scope.onResizeFunction = function () {
                         var filterHeight = 50;

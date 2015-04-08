@@ -11,9 +11,4 @@ module TechRadar {
             public text        : string,
             public media       : string) {}
     }
-
-    // export interface ITechnologies extends Array<Technology> {
-    //
-    // }
-
 }

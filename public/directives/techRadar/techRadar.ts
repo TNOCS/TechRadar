@@ -50,8 +50,8 @@ module TechRadar {
       * @seealso: http://www.tnoda.com/blog/2013-12-19
       */
     myModule
-        .directive('techRadarChart', ['$filter',
-        function ($filter): ng.IDirective {
+        .directive('techRadarChart', ['$filter', 'busService',
+        function ($filter: ng.IFilterService, bus: csComp.Services.MessageBusService): ng.IDirective {
             return {
                 terminal: true,       // do not compile any other internal directives
                 restrict: 'EA',       // E = elements, other options are A=attributes and C=classes
@@ -147,7 +147,8 @@ module TechRadar {
                                 .attr("fill", color(index++));
 
                             chart.append("text")
-                                .attr("transform", function(d){ return "translate(" + (curRadius - 10) + ", -5)";})
+                                .attr("transform", function(d){ return "translate(" + (curRadius - 5) + ", -5)";})
+                                .attr("dy", "1.2em")
                                 .attr("text-anchor", "end")
                                 .text(period);
                         });
@@ -201,31 +202,69 @@ module TechRadar {
                         });
 
                         // Draw the items
-                        chart.selectAll(".fa")
+                        /* Define the data for the circles */
+                        var elem = chart.selectAll("g")
                             .data(technologies)
-                            .enter().append("text")
-                            .attr("transform", function(t: Technology){
-                                var categoryInfo = categoriesInfo[t.category];
-                                var periodInfo   = periodsInfo[t.timePeriod];
-                                var angle  = categoryInfo.startAngle + Math.random() * (categoryInfo.endAngle - categoryInfo.startAngle);
-                                var radius = periodInfo.innerRadius + Math.random() * (periodInfo.outerRadius - periodInfo.innerRadius);
-                                var x = Math.sin(angle) * radius;
-                                var y = -Math.cos(angle) * radius;
-                                return "translate(" + x + "," + y + ")";})
-                            .attr('font-size', function(t: Technology) { return '2em'} )
-                            .attr('font-family', 'FontAwesome')
-                            .attr("text-anchor", "middle")
-                            .text(function(d) { return '\uf118' });
-                            // .attr("class", "dot fa fa-exclamation-triangle")
-                            // .attr("r", 3.5)
-                            // .attr("cx", function(d) { return 5 + 100 * Math.random(); })
-                            // .attr("cy", function(d) { return -5 + 100 * Math.random(); })
-                            // .style("fill", function(d) { return color(d.species); });                        // technologies.forEach((technology) => {
-                        //
-                        // });
 
-                        // console.log('Technologies: ')
-                        // console.log(scope.technologies);
+                        /*Create and place the "blocks" containing the circle and the text */
+                        var elemEnter = elem.enter()
+                            .append("g")
+                            .attr('class', 'shortTitle')
+                            .attr("transform", function(t: Technology){
+                                    var categoryInfo = categoriesInfo[t.category];
+                                    var periodInfo   = periodsInfo[t.timePeriod];
+                                    var angle  = categoryInfo.startAngle + Math.max(0.3, Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                                    var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
+                                    var x =  Math.sin(angle) * radius;
+                                    var y = -Math.cos(angle) * radius;
+                                    return "translate(" + x + "," + y + ")";
+                                })
+                            .on("mouseover", function(t: Technology, i: number) {
+                                bus.publish('technology', 'selected', t);
+                            });
+
+                        /* Create the circle for each block */
+                        var circle = elemEnter.append("circle")
+                            .attr("r", 10)
+                            .attr("stroke", "black")
+                            .attr("fill", function(t: Technology) { return t.thumbnail.toLowerCase() === 'new' ? "red" : "black" });
+
+                        /* Create the index for each block */
+                        elemEnter.append("text")
+                            .attr("dx", function(t: Technology, i: number) { return i > 9 ? -7 : -4; })
+                            .attr("dy", 5)
+                            .text(function(t: Technology, i: number){return (i+1) });
+
+                        /* Create the subtitle for each block */
+                        elemEnter.append("text")
+                            .attr("dx", 14)
+                            .attr("dy", 5)
+                            .text(function(t: Technology, i: number){return t.shortTitle });
+
+
+                        // chart.selectAll(".fa")
+                        //     .data(technologies)
+                        //     .enter().append("text")
+                        //     .attr("transform", function(t: Technology){
+                        //         var categoryInfo = categoriesInfo[t.category];
+                        //         var periodInfo   = periodsInfo[t.timePeriod];
+                        //         var angle  = categoryInfo.startAngle + Math.max(0.3, Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                        //         var radius = periodInfo.innerRadius + Math.random() * (periodInfo.outerRadius - periodInfo.innerRadius);
+                        //         t.x =  Math.sin(angle) * radius;
+                        //         t.y = -Math.cos(angle) * radius;
+                        //         return "translate(" + t.x + "," + t.y + ")";})
+                        //     .attr('font-size', function(t: Technology) { return '1.5em'} )
+                        //     .attr('font-family', 'FontAwesome')
+                        //     .attr("text-anchor", "middle")
+                        //     .text(function(d) { return '\uf111' });
+                        // chart.selectAll(".shortTitle")
+                        //     .data(technologies)
+                        //     .enter().append("text")
+                        //     .attr("transform", function(t: Technology){
+                        //         return "translate(" + (t.x-5) + "," + (t.y-5) + ")";})
+                        //     .attr('class', 'shortTitle')
+                        //     .attr("text-anchor", "start")
+                        //     .text(function(t: Technology, i: number) { return (i+1) + ' ' + t.shortTitle });
                     };
 
                     scope.$watch('technologies', function (newVal, oldVal) {

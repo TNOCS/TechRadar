@@ -16,8 +16,8 @@ var TechRadar;
     })();
     TechRadar.RadarSection = RadarSection;
     TechRadar.myModule
-        .directive('techRadarChart', ['$filter',
-        function ($filter) {
+        .directive('techRadarChart', ['$filter', 'busService',
+        function ($filter, bus) {
             return {
                 terminal: true,
                 restrict: 'EA',
@@ -91,7 +91,8 @@ var TechRadar;
                                 .attr("d", arc)
                                 .attr("fill", color(index++));
                             chart.append("text")
-                                .attr("transform", function (d) { return "translate(" + (curRadius - 10) + ", -5)"; })
+                                .attr("transform", function (d) { return "translate(" + (curRadius - 5) + ", -5)"; })
+                                .attr("dy", "1.2em")
                                 .attr("text-anchor", "end")
                                 .text(period);
                         });
@@ -135,22 +136,35 @@ var TechRadar;
                                 .attr("stroke-width", 2)
                                 .attr("stroke", "black");
                         });
-                        chart.selectAll(".fa")
-                            .data(technologies)
-                            .enter().append("text")
+                        var elem = chart.selectAll("g")
+                            .data(technologies);
+                        var elemEnter = elem.enter()
+                            .append("g")
+                            .attr('class', 'shortTitle')
                             .attr("transform", function (t) {
                             var categoryInfo = categoriesInfo[t.category];
                             var periodInfo = periodsInfo[t.timePeriod];
-                            var angle = categoryInfo.startAngle + Math.random() * (categoryInfo.endAngle - categoryInfo.startAngle);
-                            var radius = periodInfo.innerRadius + Math.random() * (periodInfo.outerRadius - periodInfo.innerRadius);
+                            var angle = categoryInfo.startAngle + Math.max(0.3, Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                            var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
                             var x = Math.sin(angle) * radius;
                             var y = -Math.cos(angle) * radius;
                             return "translate(" + x + "," + y + ")";
                         })
-                            .attr('font-size', function (t) { return '2em'; })
-                            .attr('font-family', 'FontAwesome')
-                            .attr("text-anchor", "middle")
-                            .text(function (d) { return '\uf118'; });
+                            .on("mouseover", function (t, i) {
+                            bus.publish('technology', 'selected', t);
+                        });
+                        var circle = elemEnter.append("circle")
+                            .attr("r", 10)
+                            .attr("stroke", "black")
+                            .attr("fill", function (t) { return t.thumbnail.toLowerCase() === 'new' ? "red" : "black"; });
+                        elemEnter.append("text")
+                            .attr("dx", function (t, i) { return i > 9 ? -7 : -4; })
+                            .attr("dy", 5)
+                            .text(function (t, i) { return (i + 1); });
+                        elemEnter.append("text")
+                            .attr("dx", 14)
+                            .attr("dy", 5)
+                            .text(function (t, i) { return t.shortTitle; });
                     };
                     scope.$watch('technologies', function (newVal, oldVal) {
                         if (newVal !== oldVal)

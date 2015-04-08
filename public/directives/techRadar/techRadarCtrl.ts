@@ -36,12 +36,11 @@ module TechRadar {
             if (!spreadsheet) return;
             this.technologies = [];
             spreadsheet.forEach((row) => {
-                console.log(row.Category);
-                console.log(row.Title);
+                // console.log(row.Category);
+                // console.log(row.Title);
 
                 var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, 1, row.ShortTitle, row.Title, row.SubTitle, row.Text, row.Media);
                 this.technologies.push(technology);
-                //var technology = row.
             });
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
         }

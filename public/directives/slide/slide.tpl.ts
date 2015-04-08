@@ -1,1 +1,1 @@
-module Slide { export var html = '<div>SLIDE PLACEHOLDER<br />{{vm.table}}</div>'; }
+module slide { export var html = '<div class="slide">    <pre>        {{vm.technology}}    </pre></div>'; }
