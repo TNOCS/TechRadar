@@ -64,7 +64,6 @@ module TechRadar {
                     innerradius : '@',
                     margin      : '@'
                 },
-                controller: TechRadarCtrl,
                 link: function (scope: ITechRadarChartScope, element, attrs) {
                     const rad2deg = 180 / Math.PI;
                     var padding          = scope.padding    || { top: 15, right: 25, bottom: 15, left: 15 };

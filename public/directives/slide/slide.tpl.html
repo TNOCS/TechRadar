@@ -4,5 +4,7 @@
     <p>
         {{vm.text}}
     </p>
-    <!-- <img ng-src="vm.media" alt="{{vm.title}}" /> -->
+    <div class="col-md-12">
+        <img data-ng-if="vm.media" class="img-responsive" data-ng-src="{{vm.media}}" alt="{{vm.title}}" />
+    </div>
 </div>
