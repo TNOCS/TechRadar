@@ -17,7 +17,7 @@ var App;
                 spreadsheet.forEach(function (row) {
                     console.log(row.Category);
                     console.log(row.Title);
-                    var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, 1, row.ShortTitle, row.Title, row.SubTitle, row.Text, row.Media);
+                    var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, row.DeltaTime, row.DeltaCategory, row.ShortTitle, row.Title, row.SubTitle, row.Text, row.Media);
                     _this.technologies.push(technology);
                 });
                 if (_this.$scope.$root.$$phase != '$apply' && _this.$scope.$root.$$phase != '$digest') {

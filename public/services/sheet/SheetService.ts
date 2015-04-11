@@ -2,18 +2,16 @@ module csComp.Services {
     declare var Tabletop;
 
     export  interface ISpreadsheetRow {
-        Category:                 string,
-        Thumbnail:                string,
-        TimeCategory:             string,
-        RelativeTimeLocation:     string,
-        RelativeCategoryLocation: string,
-        ShortTitle:               string,
-        Title:                    string,
-        Text:                     string,
-        SubTitle:                 string,
-        Media:                    string,
-        Description:              string
-        //[header:                string]: string
+        Category:      string,
+        Thumbnail:     string,
+        TimeCategory:  string,
+        DeltaTime:     number,
+        DeltaCategory: number,
+        ShortTitle:    string,
+        Title:         string,
+        Text:          string,
+        SubTitle:      string,
+        Media:         string,
     }
 
     /**

@@ -10,6 +10,11 @@ module Slide {
         private scope     : ISlideScope;
         private technology: Technology;
 
+        public title   : string;
+        public subTitle: string;
+        public text    : string;
+        public media   : string;
+
         // $inject annotation.
         // It provides $injector with information about dependencies to be injected into constructor
         // it is better to have it close to the constructor, because the parameters must match in count and type.
@@ -29,17 +34,16 @@ module Slide {
 
             busService.subscribe('technology', (title, technology: Technology) => {
                 if (title !== 'selected') return;
-                this.technology = technology;
-                if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
-            });
-            busService.subscribe('slide', (title, slide) => {
-                if (title !== 'newSlide') return;
-                this.showSlide(slide);
+                this.showSlide(technology);
             });
         }
 
-        private showSlide(slide: ISpreadsheetRow) {
-
+        private showSlide(technology: Technology) {
+            this.technology = technology;
+            this.title      = technology.title;
+            this.subTitle   = technology.subTitle;
+            this.text       = technology.text;
+            this.media      = technology.media;
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
         }
     }

@@ -20,7 +20,7 @@ var TechRadar;
             spreadsheet.forEach(function (row) {
                 // console.log(row.Category);
                 // console.log(row.Title);
-                var technology = new TechRadar.Technology(row.Category, row.Thumbnail, row.TimeCategory, 1, row.ShortTitle, row.Title, row.SubTitle, row.Text, row.Media);
+                var technology = new TechRadar.Technology(row.Category, row.Thumbnail, row.TimeCategory, row.DeltaTime, row.DeltaCategory, row.ShortTitle, row.Title, row.SubTitle, row.Text, row.Media);
                 _this.technologies.push(technology);
             });
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {

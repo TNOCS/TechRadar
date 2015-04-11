@@ -159,19 +159,20 @@ module TechRadar {
 
                         categories.forEach((category) => {
                             categoriesInfo[category].startAngle = curAngle;
-                            if (curAngle < 0) {
+                            if (curAngle > Math.PI || curAngle < 0) {
                                 chart.append("text")
                                     .attr("transform",
-                                        "translate(" + (Math.sin(curAngle)* (outerRadius-5) + 5) + "," + (-Math.cos(curAngle)*(outerRadius-5) - 5) + ")" +
+                                        "translate(" + (Math.sin(curAngle) * (outerRadius-5)) + "," + (-Math.cos(curAngle)*(outerRadius-5) - 5) + ")" +
                                         "rotate(" + (90 + curAngle * rad2deg) + ")")
                                     .attr("text-anchor", "start")
+                                    .attr("dy", Math.cos(curAngle) * 0.6 + "em")
                                     .text(category);
                             } else {
                                 chart.append("text")
                                     .attr("transform",
-                                        "translate(" + (Math.sin(curAngle)* (outerRadius-5) - 5) + "," + (-Math.cos(curAngle)*(outerRadius-5) + 5) + ")" +
+                                        "translate(" + (Math.sin(curAngle)* (outerRadius-5) - 5) + "," + (-Math.cos(curAngle)*(outerRadius-5) + 3) + ")" +
                                         "rotate(" + (-90 + curAngle * rad2deg) + ")")
-                                    .attr("dy", "1.2em")
+                                    .attr("dy", Math.cos(curAngle) * 0.4 + 1 + "em")   // dy = 1.2em when curAngle === 0, dy = 0.8em when curAngle === PI/2
                                     .attr("text-anchor", "end")
                                     .text(category);
                             }
@@ -202,19 +203,19 @@ module TechRadar {
                         });
 
                         // Draw the items
-                        /* Define the data for the circles */
+                        // Define the data for the circles
                         var elem = chart.selectAll("g")
                             .data(technologies)
 
-                        /*Create and place the "blocks" containing the circle and the text */
+                        // Create and place the "blocks" containing the circle and the text
                         var elemEnter = elem.enter()
                             .append("g")
                             .attr('class', 'shortTitle')
                             .attr("transform", function(t: Technology){
                                     var categoryInfo = categoriesInfo[t.category];
                                     var periodInfo   = periodsInfo[t.timePeriod];
-                                    var angle  = categoryInfo.startAngle + Math.max(0.3, Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
-                                    var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
+                                    var angle  = categoryInfo.startAngle + Math.max(0.3, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                                    var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, t.relativeRadius || Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
                                     var x =  Math.sin(angle) * radius;
                                     var y = -Math.cos(angle) * radius;
                                     return "translate(" + x + "," + y + ")";
@@ -223,19 +224,19 @@ module TechRadar {
                                 bus.publish('technology', 'selected', t);
                             });
 
-                        /* Create the circle for each block */
+                        // Create the circle for each technology
                         var circle = elemEnter.append("circle")
                             .attr("r", 10)
                             .attr("stroke", "black")
                             .attr("fill", function(t: Technology) { return t.thumbnail.toLowerCase() === 'new' ? "red" : "black" });
 
-                        /* Create the index for each block */
+                        // Create the index for each technology
                         elemEnter.append("text")
                             .attr("dx", function(t: Technology, i: number) { return i > 9 ? -7 : -4; })
                             .attr("dy", 5)
                             .text(function(t: Technology, i: number){return (i+1) });
 
-                        /* Create the subtitle for each block */
+                        // Create the short title for each technology
                         elemEnter.append("text")
                             .attr("dx", 14)
                             .attr("dy", 5)

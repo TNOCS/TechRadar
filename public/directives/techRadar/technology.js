@@ -1,11 +1,12 @@
 var TechRadar;
 (function (TechRadar) {
     var Technology = (function () {
-        function Technology(category, thumbnail, timePeriod, relativeTime, shortTitle, title, subTitle, text, media) {
+        function Technology(category, thumbnail, timePeriod, relativeRadius, relativeAngle, shortTitle, title, subTitle, text, media) {
             this.category = category;
             this.thumbnail = thumbnail;
             this.timePeriod = timePeriod;
-            this.relativeTime = relativeTime;
+            this.relativeRadius = relativeRadius;
+            this.relativeAngle = relativeAngle;
             this.shortTitle = shortTitle;
             this.title = title;
             this.subTitle = subTitle;

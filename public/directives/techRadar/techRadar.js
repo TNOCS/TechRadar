@@ -100,18 +100,19 @@ var TechRadar;
                         var totAngle = endAngle - startAngle;
                         categories.forEach(function (category) {
                             categoriesInfo[category].startAngle = curAngle;
-                            if (curAngle < 0) {
+                            if (curAngle > Math.PI || curAngle < 0) {
                                 chart.append("text")
-                                    .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5) + 5) + "," + (-Math.cos(curAngle) * (outerRadius - 5) - 5) + ")" +
+                                    .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5)) + "," + (-Math.cos(curAngle) * (outerRadius - 5) - 5) + ")" +
                                     "rotate(" + (90 + curAngle * rad2deg) + ")")
                                     .attr("text-anchor", "start")
+                                    .attr("dy", Math.cos(curAngle) * 0.6 + "em")
                                     .text(category);
                             }
                             else {
                                 chart.append("text")
-                                    .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5) - 5) + "," + (-Math.cos(curAngle) * (outerRadius - 5) + 5) + ")" +
+                                    .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5) - 5) + "," + (-Math.cos(curAngle) * (outerRadius - 5) + 3) + ")" +
                                     "rotate(" + (-90 + curAngle * rad2deg) + ")")
-                                    .attr("dy", "1.2em")
+                                    .attr("dy", Math.cos(curAngle) * 0.4 + 1 + "em")
                                     .attr("text-anchor", "end")
                                     .text(category);
                             }
@@ -144,8 +145,8 @@ var TechRadar;
                             .attr("transform", function (t) {
                             var categoryInfo = categoriesInfo[t.category];
                             var periodInfo = periodsInfo[t.timePeriod];
-                            var angle = categoryInfo.startAngle + Math.max(0.3, Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
-                            var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
+                            var angle = categoryInfo.startAngle + Math.max(0.3, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                            var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, t.relativeRadius || Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
                             var x = Math.sin(angle) * radius;
                             var y = -Math.cos(angle) * radius;
                             return "translate(" + x + "," + y + ")";

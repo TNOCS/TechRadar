@@ -29,12 +29,6 @@ var Slide;
                         scope.$apply();
                     });
                 },
-                compile: function (el) {
-                    var fn = $compile(el);
-                    return function (scope) {
-                        fn(scope);
-                    };
-                },
                 replace: true,
                 transclude: true,
                 controller: Slide.SlideCtrl

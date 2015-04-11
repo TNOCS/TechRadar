@@ -12,8 +12,8 @@ var gulp      = require('gulp'),
     plumber   = require('gulp-plumber'),
     useref    = require('gulp-useref'),
     gulpif    = require('gulp-if'),
+    exec      = require('child_process').exec,
     watch     = require('gulp-watch');
-
 
 gulp.task('debug-built', function() {
     var assets = useref.assets();
@@ -37,6 +37,14 @@ gulp.task('release-built', function() {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('run node', function (cb) {
+  exec('node server.js', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+})
+
 gulp.task('convertTemplates2Ts', function() {
     gulp.src('./**/*.tpl.html')
         .pipe(plumber())
@@ -52,6 +60,12 @@ gulp.task('convertTemplates2Ts', function() {
         .pipe(rename({ extname: '.ts' }))
         .pipe(gulp.dest('./'));
 });
+
+gulp.task('watch', function () {
+    gulp.watch('./**/*.tpl.html', ['convertTemplates2Ts']);
+});
+
+gulp.task('default', ['convertTemplates2Ts', 'watch']);
 
 // // JS hint task
 // gulp.task('lint', function() {
