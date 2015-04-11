@@ -4,11 +4,22 @@
     font-weight: normal;
     src: url("../includes/ROsanswebtextregular.ttf") format("opentype");
 }
+@media (min-width: 1600px) {
+  .container {
+    width: 1570px;
+  }
+}
+@media (min-width: 1900px) {
+  .container {
+    width: 1870px;
+  }
+}
 html, body, #map {
     font-family: ROSans;
     height: 100%;
     overflow: hidden;
     width: 100%;
+    background: beige;
 }
 html, body, #container {
     height: 100%;
@@ -24,11 +35,17 @@ body {
     text-align: center;
 }
 .shortTitle {
-    fill: white;
+    fill: black;
     font-size: 1em;
 }
 .shortTitle:hover {
     stroke: yellow;
     fill: yellow;
     z-index: 100;
+}
+.new {
+    fill: red;
+}
+.defaultcircle {
+    fill: yellow;
 }

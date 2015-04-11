@@ -45,12 +45,6 @@ module Slide {
                         scope.$apply();
                     });
                 },
-                // compile   : el => {    // I need to explicitly compile it in order to use interpolation like {{xxx}}
-                //    var fn = $compile(el);
-                //    return scope => {
-                //        fn(scope);
-                //    };
-                // },
                 replace   : true,    // Remove the directive from the DOM
                 transclude: true,    // Add elements and attributes to the template
                 controller: SlideCtrl

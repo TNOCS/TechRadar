@@ -33,7 +33,7 @@ var TechRadar;
                 controller: TechRadar.TechRadarCtrl,
                 link: function (scope, element, attrs) {
                     var rad2deg = 180 / Math.PI;
-                    var padding = scope.padding || { top: 15, right: 5, bottom: 0, left: 10 };
+                    var padding = scope.padding || { top: 15, right: 25, bottom: 15, left: 15 };
                     var outerRadius = scope.radius || 100;
                     var innerRadius = scope.innerradius || 75;
                     var startAngle = scope.startangle ? scope.startangle / rad2deg : -Math.PI / 2;
@@ -102,10 +102,10 @@ var TechRadar;
                             categoriesInfo[category].startAngle = curAngle;
                             if (curAngle > Math.PI || curAngle < 0) {
                                 chart.append("text")
-                                    .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5)) + "," + (-Math.cos(curAngle) * (outerRadius - 5) - 5) + ")" +
+                                    .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5)) + "," + (-Math.cos(curAngle) * (outerRadius - 5) - 3) + ")" +
                                     "rotate(" + (90 + curAngle * rad2deg) + ")")
                                     .attr("text-anchor", "start")
-                                    .attr("dy", Math.cos(curAngle) * 0.6 + "em")
+                                    .attr("dy", -5)
                                     .text(category);
                             }
                             else {
@@ -143,6 +143,7 @@ var TechRadar;
                             .append("g")
                             .attr('class', 'shortTitle')
                             .attr("transform", function (t) {
+                            console.log(t);
                             var categoryInfo = categoriesInfo[t.category];
                             var periodInfo = periodsInfo[t.timePeriod];
                             var angle = categoryInfo.startAngle + Math.max(0.3, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
@@ -157,13 +158,13 @@ var TechRadar;
                         var circle = elemEnter.append("circle")
                             .attr("r", 10)
                             .attr("stroke", "black")
-                            .attr("fill", function (t) { return t.thumbnail.toLowerCase() === 'new' ? "red" : "black"; });
+                            .attr("class", function (t) { return t.thumbnail.toLowerCase() || "defaultcircle"; });
                         elemEnter.append("text")
-                            .attr("dx", function (t, i) { return i > 9 ? -7 : -4; })
+                            .attr("dx", function (t, i) { return i > 9 ? (i > 99 ? -9 : -7) : -4; })
                             .attr("dy", 5)
                             .text(function (t, i) { return (i + 1); });
                         elemEnter.append("text")
-                            .attr("dx", 14)
+                            .attr("dx", 16)
                             .attr("dy", 5)
                             .text(function (t, i) { return t.shortTitle; });
                     };
