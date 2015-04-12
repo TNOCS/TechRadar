@@ -9,12 +9,6 @@ var TechRadar;
     catch (err) {
         TechRadar.myModule = angular.module(moduleName, []);
     }
-    var RadarSection = (function () {
-        function RadarSection() {
-        }
-        return RadarSection;
-    })();
-    TechRadar.RadarSection = RadarSection;
     TechRadar.myModule
         .directive('techRadarChart', ['$filter', 'busService',
         function ($filter, bus) {
@@ -40,19 +34,31 @@ var TechRadar;
                     var cursorTextHeight = 12;
                     var actualWidth = 2 * outerRadius + padding.left + padding.right;
                     var actualHeight = 2 * outerRadius + padding.top + padding.bottom;
-                    var chart = d3.select(element[0])
-                        .append('svg:svg')
-                        .attr('width', actualWidth)
-                        .attr('height', actualHeight)
-                        .append("g")
-                        .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
-                    scope.render = function (technologies) {
+                    scope.render = function (technologies, renderOptions) {
+                        d3.select(element[0]).selectAll("*").remove();
+                        var chart = d3.select(element[0])
+                            .append('svg:svg')
+                            .attr('width', actualWidth)
+                            .attr('height', actualHeight)
+                            .append("g")
+                            .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
                         var color = d3.scale.category20c();
                         var categories = [];
                         var categoriesInfo = {};
                         var periods = [];
                         var periodsInfo = {};
-                        technologies.forEach(function (t) {
+                        var filteredTechnologies = [];
+                        if (renderOptions && (renderOptions.time || renderOptions.category)) {
+                            technologies.forEach(function (t) {
+                                if ((renderOptions.time && t.timePeriod === renderOptions.time) ||
+                                    (renderOptions.category && t.category === renderOptions.category))
+                                    filteredTechnologies.push(t);
+                            });
+                        }
+                        else {
+                            filteredTechnologies = technologies;
+                        }
+                        filteredTechnologies.forEach(function (t) {
                             if (categories.indexOf(t.category) < 0) {
                                 categories.push(t.category);
                                 categoriesInfo[t.category] = { count: 1, startAngle: 0, endAngle: 0, innerRadius: 0, outerRadius: 0 };
@@ -71,7 +77,7 @@ var TechRadar;
                         console.log(categories);
                         console.log(periods);
                         console.log(periodsInfo);
-                        var totalTech = technologies.length;
+                        var totalTech = filteredTechnologies.length;
                         var curRadius = innerRadius;
                         var index = 0;
                         var curCount = 0;
@@ -93,28 +99,38 @@ var TechRadar;
                                 .attr("transform", function (d) { return "translate(" + (curRadius - 5) + ", -5)"; })
                                 .attr("dy", "1.2em")
                                 .attr("text-anchor", "end")
-                                .text(period);
+                                .attr("class", "period")
+                                .text(period)
+                                .on("click", function (t, i) {
+                                scope.render(technologies, { time: period });
+                            });
                         });
                         var curAngle = startAngle;
                         var totAngle = endAngle - startAngle;
                         categories.forEach(function (category) {
                             categoriesInfo[category].startAngle = curAngle;
+                            var textEl;
                             if (curAngle > Math.PI || curAngle < 0) {
-                                chart.append("text")
+                                textEl = chart.append("text")
                                     .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5)) + "," + (-Math.cos(curAngle) * (outerRadius - 5) - 3) + ")" +
                                     "rotate(" + (90 + curAngle * rad2deg) + ")")
                                     .attr("text-anchor", "start")
                                     .attr("dy", -5)
+                                    .attr("class", "category")
                                     .text(category);
                             }
                             else {
-                                chart.append("text")
+                                textEl = chart.append("text")
                                     .attr("transform", "translate(" + (Math.sin(curAngle) * (outerRadius - 5) - 5) + "," + (-Math.cos(curAngle) * (outerRadius - 5) + 3) + ")" +
                                     "rotate(" + (-90 + curAngle * rad2deg) + ")")
                                     .attr("dy", Math.cos(curAngle) * 0.4 + 1 + "em")
                                     .attr("text-anchor", "end")
+                                    .attr("class", "category")
                                     .text(category);
                             }
+                            textEl.on("click", function (t, i) {
+                                scope.render(technologies, { category: category });
+                            });
                             var x0 = +Math.sin(curAngle) * innerRadius, y0 = -Math.cos(curAngle) * innerRadius;
                             var x1 = +Math.sin(curAngle) * outerRadius, y1 = -Math.cos(curAngle) * outerRadius;
                             chart.append('line')
@@ -137,7 +153,7 @@ var TechRadar;
                                 .attr("stroke", "black");
                         });
                         var elem = chart.selectAll("g")
-                            .data(technologies);
+                            .data(filteredTechnologies);
                         var elemEnter = elem.enter()
                             .append("g")
                             .attr('class', 'shortTitle')
@@ -145,7 +161,7 @@ var TechRadar;
                             console.log(t);
                             var categoryInfo = categoriesInfo[t.category];
                             var periodInfo = periodsInfo[t.timePeriod];
-                            var angle = categoryInfo.startAngle + Math.max(0.3, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                            var angle = categoryInfo.startAngle + Math.max(0.1, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
                             var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, t.relativeRadius || Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
                             var x = Math.sin(angle) * radius;
                             var y = -Math.cos(angle) * radius;
@@ -154,18 +170,31 @@ var TechRadar;
                             .on("mouseover", function (t, i) {
                             bus.publish('technology', 'selected', t);
                         });
-                        var circle = elemEnter.append("circle")
-                            .attr("r", 10)
-                            .attr("stroke", "black")
-                            .attr("class", function (t) { return t.thumbnail.toLowerCase() || "defaultcircle"; });
                         elemEnter.append("text")
-                            .attr("dx", function (t, i) { return i > 9 ? (i > 99 ? -9 : -7) : -4; })
-                            .attr("dy", 5)
-                            .text(function (t, i) { return (i + 1); });
+                            .attr("font-family", "FontAwesome")
+                            .attr("font-size", function (t) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
+                            .attr("fill", "black")
+                            .attr("text-anchor", "end")
+                            .attr("class", function (t) { return t.thumbnail.toLowerCase() || "defaultcircle"; })
+                            .text(function (t) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
                         elemEnter.append("text")
-                            .attr("dx", 16)
-                            .attr("dy", 5)
+                            .attr("dx", 5)
+                            .attr("font-size", function (t) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
                             .text(function (t, i) { return t.shortTitle; });
+                        if (renderOptions && (renderOptions.time || renderOptions.category)) {
+                            chart.append("text")
+                                .attr("x", 0)
+                                .attr("y", 0)
+                                .attr("dy", 25)
+                                .attr("text-anchor", "middle")
+                                .attr("class", "backarrow")
+                                .attr("font-family", "FontAwesome")
+                                .attr("font-size", FontAwesomeUtils.FontAwesomeConverter.convertToSize("fa-5x"))
+                                .text(FontAwesomeUtils.FontAwesomeConverter.convertToCharacter("fa-arrow-circle-o-left"))
+                                .on("click", function (t, i) {
+                                scope.render(technologies);
+                            });
+                        }
                     };
                     scope.$watch('technologies', function (newVal, oldVal) {
                         if (newVal !== oldVal)

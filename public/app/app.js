@@ -32,7 +32,7 @@ var App;
                     else {
                         deltaCategory = deltaCatString;
                     }
-                    var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.SubTitle, row.Text, row.Media);
+                    var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media);
                     _this.technologies.push(technology);
                 });
                 if (_this.$scope.$root.$$phase != '$apply' && _this.$scope.$root.$$phase != '$digest') {

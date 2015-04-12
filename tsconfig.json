@@ -24,6 +24,7 @@
         "./public/directives/slide/slide.tpl.ts",
         "./public/directives/slide/slide.ts",
         "./public/directives/slide/slideCtrl.ts",
+        "./public/directives/techRadar/FontAwesomeConverter.ts",
         "./public/directives/techRadar/techRadar.ts",
         "./public/directives/techRadar/technology.ts",
         "./public/services/bus/MessageBus.ts",

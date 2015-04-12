@@ -18,6 +18,11 @@ module TechRadar {
 
     declare var String;
 
+    export interface RenderOptions {
+        time?    : string;
+        category?: string;
+    }
+
     export interface ITechRadarChartScope extends ng.IScope {
         technologies: Technology[];
         /**
@@ -33,13 +38,7 @@ module TechRadar {
         radius?: number;
         innerradius?: number;
         padding?     : { top: number; right: number; bottom: number; left: number; };
-        render(technologies: Technology[]): void;
-    }
-
-    export class RadarSection {
-        title     : string;
-        startAngle: number;
-        endAngle  : number;
+        render(technologies: Technology[], renderOptions?: RenderOptions): void;
     }
 
     /**
@@ -76,14 +75,22 @@ module TechRadar {
                     var actualWidth  = 2 * outerRadius + padding.left + padding.right;
                     var actualHeight = 2 * outerRadius + padding.top  + padding.bottom;
 
-                    var chart = d3.select(element[0])
-                        .append('svg:svg')
-                        .attr('width', actualWidth)
-                        .attr('height', actualHeight)
-                        .append("g")
-                        .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+                    // var chart = d3.select(element[0])
+                    //     .append('svg:svg')
+                    //     .attr('width', actualWidth)
+                    //     .attr('height', actualHeight)
+                    //     .append("g")
+                    //     .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
 
-                    scope.render = function(technologies: Technology[]) {
+                    scope.render = function(technologies: Technology[], renderOptions?: RenderOptions) {
+                        d3.select(element[0]).selectAll("*").remove();
+                        var chart = d3.select(element[0])
+                            .append('svg:svg')
+                            .attr('width', actualWidth)
+                            .attr('height', actualHeight)
+                            .append("g")
+                            .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+
                         var color = d3.scale.category20c();
 
                         var categories  : string[] = [];
@@ -103,7 +110,18 @@ module TechRadar {
                             }
                         } = {};
 
-                        technologies.forEach((t) => {
+                        var filteredTechnologies: Technology[] = [];
+                        if (renderOptions && (renderOptions.time || renderOptions.category)) {
+                            technologies.forEach((t) => {
+                                if ((renderOptions.time && t.timePeriod === renderOptions.time) ||
+                                    (renderOptions.category && t.category === renderOptions.category) )
+                                    filteredTechnologies.push(t);
+                            });
+                        } else {
+                            filteredTechnologies = technologies;
+                        }
+
+                        filteredTechnologies.forEach((t) => {
                             if (categories.indexOf(t.category) < 0) {
                                 categories.push(t.category);
                                 categoriesInfo[t.category] = { count: 1, startAngle: 0, endAngle: 0, innerRadius: 0, outerRadius: 0 };
@@ -123,7 +141,7 @@ module TechRadar {
                         console.log(periodsInfo);
 
                         // Draw the rings
-                        var totalTech   = technologies.length;
+                        var totalTech   = filteredTechnologies.length;
                         var curRadius   = innerRadius;
                         var index       = 0;
                         var curCount    = 0;
@@ -149,7 +167,11 @@ module TechRadar {
                                 .attr("transform", function(d){ return "translate(" + (curRadius - 5) + ", -5)";})
                                 .attr("dy", "1.2em")
                                 .attr("text-anchor", "end")
-                                .text(period);
+                                .attr("class", "period")
+                                .text(period)
+                                .on("click", (t: Technology, i: number) => {
+                                    scope.render(technologies, { time: period });
+                                });
                         });
 
                         // Draw the lines denoting the segments
@@ -158,23 +180,30 @@ module TechRadar {
 
                         categories.forEach((category) => {
                             categoriesInfo[category].startAngle = curAngle;
+                            var textEl;
                             if (curAngle > Math.PI || curAngle < 0) {
-                                chart.append("text")
+                                textEl = chart.append("text")
                                     .attr("transform",
                                         "translate(" + (Math.sin(curAngle) * (outerRadius-5)) + "," + (-Math.cos(curAngle)*(outerRadius-5) - 3) + ")" +
                                         "rotate(" + (90 + curAngle * rad2deg) + ")")
                                     .attr("text-anchor", "start")
                                     .attr("dy", -5)
+                                    .attr("class", "category")
                                     .text(category);
                             } else {
-                                chart.append("text")
+                                textEl = chart.append("text")
                                     .attr("transform",
                                         "translate(" + (Math.sin(curAngle)* (outerRadius-5) - 5) + "," + (-Math.cos(curAngle)*(outerRadius-5) + 3) + ")" +
                                         "rotate(" + (-90 + curAngle * rad2deg) + ")")
                                     .attr("dy", Math.cos(curAngle) * 0.4 + 1 + "em")   // dy = 1.2em when curAngle === 0, dy = 0.8em when curAngle === PI/2
                                     .attr("text-anchor", "end")
+                                    .attr("class", "category")
                                     .text(category);
                             }
+                            textEl.on("click", (t: Technology, i: number) => {
+                                scope.render(technologies, { category: category });
+                            });
+
                             var x0 =  + Math.sin(curAngle)*innerRadius,
                                 y0 =  - Math.cos(curAngle)*innerRadius;
                             var x1 =  + Math.sin(curAngle)*outerRadius,
@@ -204,7 +233,7 @@ module TechRadar {
                         // Draw the items
                         // Define the data for the circles
                         var elem = chart.selectAll("g")
-                            .data(technologies)
+                            .data(filteredTechnologies)
 
                         // Create and place the "blocks" containing the circle and the text
                         var elemEnter = elem.enter()
@@ -214,7 +243,7 @@ module TechRadar {
                                 console.log(t);
                                     var categoryInfo = categoriesInfo[t.category];
                                     var periodInfo   = periodsInfo[t.timePeriod];
-                                    var angle  = categoryInfo.startAngle + Math.max(0.3, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                                    var angle  = categoryInfo.startAngle + Math.max(0.1, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
                                     var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, t.relativeRadius || Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
                                     var x =  Math.sin(angle) * radius;
                                     var y = -Math.cos(angle) * radius;
@@ -224,48 +253,36 @@ module TechRadar {
                                 bus.publish('technology', 'selected', t);
                             });
 
-                        // Create the circle for each technology
-                        var circle = elemEnter.append("circle")
-                            .attr("r", 10)
-                            .attr("stroke", "black")
-                            .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "defaultcircle"; });// === 'new' ? "red" : "black" });
-
-                        // Create the index for each technology
+                        // Create the Font Awesome icon
                         elemEnter.append("text")
-                            .attr("dx", function(t: Technology, i: number) { return i > 9 ? (i > 99 ? -9 : -7) : -4; })
-                            .attr("dy", 5)
-                            .text(function(t: Technology, i: number){return (i+1) });
+                            .attr("font-family", "FontAwesome")
+                            .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
+                            .attr("fill", "black")
+                            .attr("text-anchor", "end")
+                            .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "defaultcircle"; })
+                            .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
 
                         // Create the short title for each technology
                         elemEnter.append("text")
-                            .attr("dx", 16)
-                            .attr("dy", 5)
+                            .attr("dx", 5)
+                            .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
                             .text(function(t: Technology, i: number){return t.shortTitle });
 
-
-                        // chart.selectAll(".fa")
-                        //     .data(technologies)
-                        //     .enter().append("text")
-                        //     .attr("transform", function(t: Technology){
-                        //         var categoryInfo = categoriesInfo[t.category];
-                        //         var periodInfo   = periodsInfo[t.timePeriod];
-                        //         var angle  = categoryInfo.startAngle + Math.max(0.3, Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
-                        //         var radius = periodInfo.innerRadius + Math.random() * (periodInfo.outerRadius - periodInfo.innerRadius);
-                        //         t.x =  Math.sin(angle) * radius;
-                        //         t.y = -Math.cos(angle) * radius;
-                        //         return "translate(" + t.x + "," + t.y + ")";})
-                        //     .attr('font-size', function(t: Technology) { return '1.5em'} )
-                        //     .attr('font-family', 'FontAwesome')
-                        //     .attr("text-anchor", "middle")
-                        //     .text(function(d) { return '\uf111' });
-                        // chart.selectAll(".shortTitle")
-                        //     .data(technologies)
-                        //     .enter().append("text")
-                        //     .attr("transform", function(t: Technology){
-                        //         return "translate(" + (t.x-5) + "," + (t.y-5) + ")";})
-                        //     .attr('class', 'shortTitle')
-                        //     .attr("text-anchor", "start")
-                        //     .text(function(t: Technology, i: number) { return (i+1) + ' ' + t.shortTitle });
+                        // In case we are looking at details, add a back arrow to return to the main view
+                        if (renderOptions && (renderOptions.time || renderOptions.category)) {
+                            chart.append("text")
+                                .attr("x", 0)
+                                .attr("y", 0)
+                                .attr("dy", 25)
+                                .attr("text-anchor", "middle")
+                                .attr("class", "backarrow")
+                                .attr("font-family", "FontAwesome")
+                                .attr("font-size", FontAwesomeUtils.FontAwesomeConverter.convertToSize("fa-5x"))
+                                .text(FontAwesomeUtils.FontAwesomeConverter.convertToCharacter("fa-arrow-circle-o-left"))
+                                .on("click", (t: Technology, i: number) => {
+                                    scope.render(technologies);
+                                });
+                        }
                     };
 
                     scope.$watch('technologies', function (newVal, oldVal) {

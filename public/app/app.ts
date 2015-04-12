@@ -53,7 +53,7 @@ module App {
                     } else {
                         deltaCategory = deltaCatString;
                     }
-                    var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.SubTitle, row.Text, row.Media);
+                    var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media);
                     this.technologies.push(technology);
                     //var technology = row.
                 });

@@ -43,6 +43,25 @@ body {
     fill: yellow;
     z-index: 100;
 }
+.category:hover {
+    cursor: pointer;
+    stroke: yellow;
+    fill: yellow;
+    z-index: 100;
+}
+.period:hover {
+    cursor: pointer;
+    stroke: yellow;
+    fill: yellow;
+    z-index: 100;
+}
+.backarrow {
+    cursor: pointer;
+    fill: black;
+}
+.backarrow:hover {
+    stroke: red;
+}
 .new {
     fill: red;
 }
