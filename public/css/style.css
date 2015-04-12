@@ -39,20 +39,27 @@ body {
     font-size: 1em;
 }
 .shortTitle:hover {
-    stroke: yellow;
+    font-weight: bold;
     fill: yellow;
+    font-size: 1.2em;
     z-index: 100;
+}
+.period  {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.category {
+    font-size: 1.2em;
+    font-weight: bold;
 }
 .category:hover {
     cursor: pointer;
-    stroke: yellow;
-    fill: yellow;
+    fill: #187aac;
     z-index: 100;
 }
 .period:hover {
     cursor: pointer;
-    stroke: yellow;
-    fill: yellow;
+    fill: #187aac;
     z-index: 100;
 }
 .backarrow {

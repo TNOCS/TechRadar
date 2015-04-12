@@ -185,7 +185,7 @@ var TechRadar;
                             chart.append("text")
                                 .attr("x", 0)
                                 .attr("y", 0)
-                                .attr("dy", 25)
+                                .attr("alignment-baseline", "central")
                                 .attr("text-anchor", "middle")
                                 .attr("class", "backarrow")
                                 .attr("font-family", "FontAwesome")
