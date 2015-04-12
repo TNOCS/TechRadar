@@ -10,7 +10,7 @@ module csComp.Services {
         ShortTitle:    string,
         Title:         string,
         Text:          string,
-        SubTitle:      string,
+        Subtitle:      string,
         Media:         string,
     }
 
