@@ -26,6 +26,8 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 public/bower_components
-dist/index.html
-dist/techradar.js
-dist/css/techradar.css
+public/**/*.js
+!public/includes/*
+dist
+
+Copy of 150304 Innovatielijst Def.xlsx

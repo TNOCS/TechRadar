@@ -1,4 +1,3 @@
-/// <vs SolutionOpened='default' />
 // http://andy-carter.com/blog/a-beginners-guide-to-the-task-runner-gulp
 // http://www.smashingmagazine.com/2014/06/11/building-with-gulp/
 
@@ -11,6 +10,7 @@ var gulp      = require('gulp'),
     concat    = require('gulp-concat'),
     plumber   = require('gulp-plumber'),
     useref    = require('gulp-useref'),
+    order     = require('gulp-order'),
     gulpif    = require('gulp-if'),
     exec      = require('child_process').exec,
     watch     = require('gulp-watch');
@@ -18,7 +18,7 @@ var gulp      = require('gulp'),
 gulp.task('debug-built', function() {
     var assets = useref.assets();
 
-    return gulp.src('./public/*.html')
+    return gulp.src('./src/*.html')
         .pipe(assets)
         .pipe(assets.restore())
         .pipe(useref())
@@ -46,7 +46,7 @@ gulp.task('run node', function (cb) {
 })
 
 gulp.task('convertTemplates2Ts', function() {
-    gulp.src('./**/*.tpl.html')
+    gulp.src('./src/**/*.tpl.html')
         .pipe(plumber())
         .pipe(cache('templates'))
         .pipe(insert.prepend(function(file) {
@@ -65,7 +65,7 @@ gulp.task('watch', function () {
     gulp.watch('./**/*.tpl.html', ['convertTemplates2Ts']);
 });
 
-gulp.task('default', ['convertTemplates2Ts', 'watch']);
+gulp.task('default', ['convertTemplates2Ts', 'debug-built', 'watch']);
 
 // // JS hint task
 // gulp.task('lint', function() {
