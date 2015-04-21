@@ -45,6 +45,7 @@ body {
     z-index: 100;
 }
 .period  {
+    fill: white;
     font-size: 1.2em;
     font-weight: bold;
 }
@@ -55,20 +56,23 @@ body {
 .category:hover {
     cursor: pointer;
     background: white;
-    fill: #187aac;
-    z-index: 100;
+    fill: yellow;
+    font-size: 1.5em;
 }
 .period:hover {
     cursor: pointer;
-    fill: #187aac;
-    z-index: 100;
+    fill: yellow;
+    /*fill: #187aac;*/
+    font-size: 1.5em;
 }
 .backarrow {
     cursor: pointer;
+    font-size: 5em;
     fill: black;
 }
 .backarrow:hover {
-    stroke: red;
+    fill: #3182bd;
+    font-size: 6em;
 }
 .new {
     fill: red;

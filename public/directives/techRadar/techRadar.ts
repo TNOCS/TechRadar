@@ -297,7 +297,6 @@ module TechRadar {
                                 .attr("text-anchor", "middle")
                                 .attr("class", "backarrow")
                                 .attr("font-family", "FontAwesome")
-                                .attr("font-size", FontAwesomeUtils.FontAwesomeConverter.convertToSize("fa-5x"))
                                 .text(FontAwesomeUtils.FontAwesomeConverter.convertToCharacter("fa-arrow-circle-o-left"))
                                 .on("click", (t: Technology, i: number) => {
                                     scope.render(technologies);
