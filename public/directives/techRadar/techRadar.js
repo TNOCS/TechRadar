@@ -47,9 +47,9 @@ var TechRadar;
                             .attr('height', actualHeight)
                             .append("g")
                             .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
-                        var color = d3.scale.category20c();
                         var categories = [];
                         var categoriesInfo = {};
+                        var allPeriods = [];
                         var periods = [];
                         var periodsInfo = {};
                         var filteredTechnologies = [];
@@ -63,6 +63,14 @@ var TechRadar;
                         else {
                             filteredTechnologies = technologies;
                         }
+                        var color = d3.scale.category20c();
+                        var index = 0;
+                        technologies.forEach(function (t) {
+                            if (allPeriods.indexOf(t.timePeriod) >= 0)
+                                return;
+                            allPeriods.push(t.timePeriod);
+                            color(index++);
+                        });
                         filteredTechnologies.forEach(function (t) {
                             if (categories.indexOf(t.category) < 0) {
                                 categories.push(t.category);
@@ -81,7 +89,6 @@ var TechRadar;
                         });
                         var totalTech = filteredTechnologies.length;
                         var curRadius = innerRadius;
-                        var index = 0;
                         var curCount = 0;
                         periods.forEach(function (period) {
                             curCount += periodsInfo[period].count;
@@ -96,7 +103,7 @@ var TechRadar;
                                 .endAngle(endAngle);
                             chart.append("path")
                                 .attr("d", arc)
-                                .attr("fill", color(index++));
+                                .attr("fill", color(allPeriods.indexOf(period)));
                             chart.append("text")
                                 .attr("transform", function (d) { return "translate(" + (curRadius - 5) + ", -5)"; })
                                 .attr("dy", "1.2em")

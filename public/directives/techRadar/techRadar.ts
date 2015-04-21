@@ -91,8 +91,6 @@ module TechRadar {
                             .append("g")
                             .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
 
-                        var color = d3.scale.category20c();
-
                         var categories  : string[] = [];
                         var categoriesInfo: {
                             [category: string] : {
@@ -101,6 +99,7 @@ module TechRadar {
                                 endAngle   : number;
                             }
                         } = {};
+                        var allPeriods: string[] = [];
                         var periods   : string[] = [];
                         var periodsInfo: {
                             [period: string] : {
@@ -121,6 +120,15 @@ module TechRadar {
                             filteredTechnologies = technologies;
                         }
 
+                        // Create the set of possible colors
+                        var color = d3.scale.category20c();
+                        var index = 0;
+                        technologies.forEach((t) => {
+                            if (allPeriods.indexOf(t.timePeriod) >= 0) return;
+                            allPeriods.push(t.timePeriod);
+                            color(index++); // here, we make sure that the color range is always the same
+                        });
+
                         filteredTechnologies.forEach((t) => {
                             if (categories.indexOf(t.category) < 0) {
                                 categories.push(t.category);
@@ -136,14 +144,9 @@ module TechRadar {
                             }
                         });
 
-                        //console.log(categories);
-                        //console.log(periods);
-                        //console.log(periodsInfo);
-
                         // Draw the rings
                         var totalTech = filteredTechnologies.length;
                         var curRadius = innerRadius;
-                        var index     = 0;
                         var curCount  = 0;
                         periods.forEach((period) => {
                             curCount  += periodsInfo[period].count;
@@ -164,7 +167,7 @@ module TechRadar {
 
                             chart.append("path")
                                 .attr("d", arc)
-                                .attr("fill", color(index++));
+                                .attr("fill", color(allPeriods.indexOf(period)));
 
                             chart.append("text")
                                 .attr("transform", function(d) { return "translate(" + (curRadius - 5) + ", -5)";})
