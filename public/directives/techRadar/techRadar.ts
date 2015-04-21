@@ -75,12 +75,12 @@ module TechRadar {
                     var actualWidth  = 2 * outerRadius + padding.left + padding.right;
                     var actualHeight = 2 * outerRadius + padding.top  + padding.bottom;
 
-                    // var chart = d3.select(element[0])
-                    //     .append('svg:svg')
-                    //     .attr('width', actualWidth)
-                    //     .attr('height', actualHeight)
-                    //     .append("g")
-                    //     .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+                    // http://stackoverflow.com/questions/14167863/how-can-i-bring-a-circle-to-the-front-with-d3
+                    d3.selection.prototype.moveToFront = function() {
+                      return this.each(function(){
+                        this.parentNode.appendChild(this);
+                      });
+                    };
 
                     scope.render = function(technologies: Technology[], renderOptions?: RenderOptions) {
                         d3.select(element[0]).selectAll("*").remove();
@@ -136,19 +136,22 @@ module TechRadar {
                             }
                         });
 
-                        console.log(categories);
-                        console.log(periods);
-                        console.log(periodsInfo);
+                        //console.log(categories);
+                        //console.log(periods);
+                        //console.log(periodsInfo);
 
                         // Draw the rings
-                        var totalTech   = filteredTechnologies.length;
-                        var curRadius   = innerRadius;
-                        var index       = 0;
-                        var curCount    = 0;
+                        var totalTech = filteredTechnologies.length;
+                        var curRadius = innerRadius;
+                        var index     = 0;
+                        var curCount  = 0;
                         periods.forEach((period) => {
-                            curCount += periodsInfo[period].count;
+                            curCount  += periodsInfo[period].count;
                             var innerR = curRadius;
-                            var outerR = curRadius = innerRadius + (outerRadius - innerRadius) * curCount / totalTech;
+                            // (outerR^2-innerR^2) / (outerRadius^2-innerRadius^2) = curCount / totalTech
+                            // (outerR^2-innerR^2) = (outerRadius^2-innerRadius^2) * curCount / totalTech
+                            //  outerR = sqrt(innerR^2 + (outerRadius^2-innerRadius^2) * curCount / totalTech)
+                            var outerR = curRadius = Math.sqrt(innerRadius*innerRadius + (outerRadius*outerRadius - innerRadius*innerRadius) * curCount / totalTech);
 
                             periodsInfo[period].innerRadius = innerR;
                             periodsInfo[period].outerRadius = outerR;
@@ -164,7 +167,7 @@ module TechRadar {
                                 .attr("fill", color(index++));
 
                             chart.append("text")
-                                .attr("transform", function(d){ return "translate(" + (curRadius - 5) + ", -5)";})
+                                .attr("transform", function(d) { return "translate(" + (curRadius - 5) + ", -5)";})
                                 .attr("dy", "1.2em")
                                 .attr("text-anchor", "end")
                                 .attr("class", "period")
@@ -200,9 +203,15 @@ module TechRadar {
                                     .attr("class", "category")
                                     .text(category);
                             }
-                            textEl.on("click", (t: Technology, i: number) => {
-                                scope.render(technologies, { category: category });
-                            });
+                            textEl
+                                .on("mouseover", function(t: Technology, i: number) {
+                                    var sel: any = d3.select(this);
+                                    sel.moveToFront();
+                                })
+                                .on("click", (t: Technology, i: number) => {
+                                    scope.render(technologies, { category: category });
+                                }
+                            );
 
                             var x0 =  + Math.sin(curAngle)*innerRadius,
                                 y0 =  - Math.cos(curAngle)*innerRadius;
@@ -233,37 +242,45 @@ module TechRadar {
                         // Draw the items
                         // Define the data for the circles
                         var elem = chart.selectAll("g")
-                            .data(filteredTechnologies)
+                            .data(filteredTechnologies);
 
                         // Create and place the "blocks" containing the circle and the text
-                        var elemEnter = elem.enter()
+                        var items = elem
+                            .enter()
                             .append("g")
-                            .attr('class', 'shortTitle')
+                            .attr('class', 'shortTitle');
+
+                        items.transition()
+                            .delay(function(d,i) { return i*10})
+                            .duration(1500)
                             .attr("transform", function(t: Technology) {
-                                console.log(t);
-                                    var categoryInfo = categoriesInfo[t.category];
-                                    var periodInfo   = periodsInfo[t.timePeriod];
-                                    var angle  = categoryInfo.startAngle + Math.max(0.1, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
-                                    var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, t.relativeRadius || Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
-                                    var x =  Math.sin(angle) * radius;
-                                    var y = -Math.cos(angle) * radius;
-                                    return "translate(" + x + "," + y + ")";
-                                })
-                            .on("mouseover", function(t: Technology, i: number) {
+                                //console.log(t);
+                                var categoryInfo = categoriesInfo[t.category];
+                                var periodInfo   = periodsInfo[t.timePeriod];
+                                var angle  = categoryInfo.startAngle + Math.max(0.1, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                                var radius = periodInfo.innerRadius  + Math.max(0.1, Math.min(0.9, t.relativeRadius || Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
+                                var x =  Math.sin(angle) * radius;
+                                var y = -Math.cos(angle) * radius;
+                                return "translate(" + x + "," + y + ")";
+                            });
+
+                        items.on("mouseover", function(t: Technology, i: number) {
+                                var sel: any = d3.select(this);
+                                sel.moveToFront();
                                 bus.publish('technology', 'selected', t);
                             });
 
                         // Create the Font Awesome icon
-                        elemEnter.append("text")
+                        items.append("text")
                             .attr("font-family", "FontAwesome")
                             .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
                             .attr("fill", "black")
                             .attr("text-anchor", "end")
-                            .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "defaultcircle"; })
+                            .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
                             .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
 
                         // Create the short title for each technology
-                        elemEnter.append("text")
+                        items.append("text")
                             .attr("dx", 5)
                             .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
                             .text(function(t: Technology, i: number){return t.shortTitle });

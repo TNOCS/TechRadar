@@ -36,8 +36,8 @@ module App {
 
                 this.technologies = [];
                 spreadsheet.forEach((row) => {
-                    console.log(row.Category);
-                    console.log(row.Title);
+                    //console.log(row.Category);
+                    //console.log(row.Title);
 
                     var deltaTimeString = row.DeltaTime;
                     var deltaCatString  = row.DeltaCategory;
@@ -67,10 +67,10 @@ module App {
         private showInfo(spreadsheet: ISpreadsheetRow[]) {
             var index = 1;
             spreadsheet.forEach((row) => {
-                console.log('Row ' + index++);
+                //console.log('Row ' + index++);
                 for (var header in row) {
                     if (!row.hasOwnProperty(header)) continue;
-                    console.log(header + ': ' + row[header]);
+                    //console.log(header + ': ' + row[header]);
                 }
             });
         }

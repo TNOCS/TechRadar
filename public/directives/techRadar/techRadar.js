@@ -34,6 +34,11 @@ var TechRadar;
                     var cursorTextHeight = 12;
                     var actualWidth = 2 * outerRadius + padding.left + padding.right;
                     var actualHeight = 2 * outerRadius + padding.top + padding.bottom;
+                    d3.selection.prototype.moveToFront = function () {
+                        return this.each(function () {
+                            this.parentNode.appendChild(this);
+                        });
+                    };
                     scope.render = function (technologies, renderOptions) {
                         d3.select(element[0]).selectAll("*").remove();
                         var chart = d3.select(element[0])
@@ -74,9 +79,6 @@ var TechRadar;
                                 periodsInfo[t.timePeriod].count++;
                             }
                         });
-                        console.log(categories);
-                        console.log(periods);
-                        console.log(periodsInfo);
                         var totalTech = filteredTechnologies.length;
                         var curRadius = innerRadius;
                         var index = 0;
@@ -84,7 +86,7 @@ var TechRadar;
                         periods.forEach(function (period) {
                             curCount += periodsInfo[period].count;
                             var innerR = curRadius;
-                            var outerR = curRadius = innerRadius + (outerRadius - innerRadius) * curCount / totalTech;
+                            var outerR = curRadius = Math.sqrt(innerRadius * innerRadius + (outerRadius * outerRadius - innerRadius * innerRadius) * curCount / totalTech);
                             periodsInfo[period].innerRadius = innerR;
                             periodsInfo[period].outerRadius = outerR;
                             var arc = d3.svg.arc()
@@ -128,7 +130,12 @@ var TechRadar;
                                     .attr("class", "category")
                                     .text(category);
                             }
-                            textEl.on("click", function (t, i) {
+                            textEl
+                                .on("mouseover", function (t, i) {
+                                var sel = d3.select(this);
+                                sel.moveToFront();
+                            })
+                                .on("click", function (t, i) {
                                 scope.render(technologies, { category: category });
                             });
                             var x0 = +Math.sin(curAngle) * innerRadius, y0 = -Math.cos(curAngle) * innerRadius;
@@ -154,11 +161,14 @@ var TechRadar;
                         });
                         var elem = chart.selectAll("g")
                             .data(filteredTechnologies);
-                        var elemEnter = elem.enter()
+                        var items = elem
+                            .enter()
                             .append("g")
-                            .attr('class', 'shortTitle')
+                            .attr('class', 'shortTitle');
+                        items.transition()
+                            .delay(function (d, i) { return i * 10; })
+                            .duration(1500)
                             .attr("transform", function (t) {
-                            console.log(t);
                             var categoryInfo = categoriesInfo[t.category];
                             var periodInfo = periodsInfo[t.timePeriod];
                             var angle = categoryInfo.startAngle + Math.max(0.1, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
@@ -166,18 +176,20 @@ var TechRadar;
                             var x = Math.sin(angle) * radius;
                             var y = -Math.cos(angle) * radius;
                             return "translate(" + x + "," + y + ")";
-                        })
-                            .on("mouseover", function (t, i) {
+                        });
+                        items.on("mouseover", function (t, i) {
+                            var sel = d3.select(this);
+                            sel.moveToFront();
                             bus.publish('technology', 'selected', t);
                         });
-                        elemEnter.append("text")
+                        items.append("text")
                             .attr("font-family", "FontAwesome")
                             .attr("font-size", function (t) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
                             .attr("fill", "black")
                             .attr("text-anchor", "end")
-                            .attr("class", function (t) { return t.thumbnail.toLowerCase() || "defaultcircle"; })
+                            .attr("class", function (t) { return t.thumbnail.toLowerCase() || "thumbnail"; })
                             .text(function (t) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
-                        elemEnter.append("text")
+                        items.append("text")
                             .attr("dx", 5)
                             .attr("font-size", function (t) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
                             .text(function (t, i) { return t.shortTitle; });

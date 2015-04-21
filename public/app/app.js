@@ -15,8 +15,8 @@ var App;
                 //busService.publish('spreadsheet', 'newSheet', spreadsheet);
                 _this.technologies = [];
                 spreadsheet.forEach(function (row) {
-                    console.log(row.Category);
-                    console.log(row.Title);
+                    //console.log(row.Category);
+                    //console.log(row.Title);
                     var deltaTimeString = row.DeltaTime;
                     var deltaCatString = row.DeltaCategory;
                     var deltaTime = 0, deltaCategory = 0;
@@ -43,11 +43,9 @@ var App;
         AppCtrl.prototype.showInfo = function (spreadsheet) {
             var index = 1;
             spreadsheet.forEach(function (row) {
-                console.log('Row ' + index++);
                 for (var header in row) {
                     if (!row.hasOwnProperty(header))
                         continue;
-                    console.log(header + ': ' + row[header]);
                 }
             });
         };

@@ -13,7 +13,16 @@ var Slide;
             });
         }
         SlideCtrl.prototype.showSlide = function (technology) {
+            if (!technology) {
+                console.log("ERROR: Technology is empty");
+                return;
+            }
             this.technology = technology;
+            if (!technology.title) {
+                console.log('Missing title:');
+                console.log(JSON.stringify(technology));
+                return;
+            }
             this.title = technology.title;
             this.subTitle = technology.subTitle;
             this.text = technology.text;

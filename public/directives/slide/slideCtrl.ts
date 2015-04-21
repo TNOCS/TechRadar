@@ -6,6 +6,9 @@ module Slide {
         vm: SlideCtrl;
     }
 
+    /**
+     * Controls how a slide is displayed.
+     */
     export class SlideCtrl {
         private scope     : ISlideScope;
         private technology: Technology;
@@ -39,7 +42,16 @@ module Slide {
         }
 
         private showSlide(technology: Technology) {
+            if (!technology) {
+                console.log("ERROR: Technology is empty");
+                return;
+            }
             this.technology = technology;
+            if (!technology.title) {
+                console.log('Missing title:');
+                console.log(JSON.stringify(technology));
+                return;
+            }
             this.title      = technology.title;
             this.subTitle   = technology.subTitle;
             this.text       = technology.text;

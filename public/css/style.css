@@ -54,6 +54,7 @@ body {
 }
 .category:hover {
     cursor: pointer;
+    background: white;
     fill: #187aac;
     z-index: 100;
 }
@@ -72,6 +73,6 @@ body {
 .new {
     fill: red;
 }
-.defaultcircle {
+.thumbnail:hover {
     fill: yellow;
 }
