@@ -27,7 +27,7 @@ var TechRadar;
                 link: function (scope, element, attrs) {
                     var rad2deg = 180 / Math.PI;
                     var padding = scope.padding || { top: 15, right: 25, bottom: 15, left: 15 };
-                    var outerRadius = scope.radius || 100;
+                    var outerRadius = scope.radius || Math.floor($(element[0]).parent().width() / 2) - padding.left - padding.right;
                     var innerRadius = scope.innerradius || 75;
                     var startAngle = scope.startangle ? scope.startangle / rad2deg : -Math.PI / 2;
                     var endAngle = scope.endangle ? scope.endangle / rad2deg : Math.PI / 2;
@@ -220,6 +220,13 @@ var TechRadar;
                     });
                     if (scope.technologies)
                         scope.render(scope.technologies);
+                    d3.select(window).on('resize', function () {
+                        console.log("Resize");
+                        outerRadius = scope.radius || Math.floor($(element[0]).parent().width() / 2) - padding.left - padding.right;
+                        actualWidth = 2 * outerRadius + padding.left + padding.right;
+                        actualHeight = 2 * outerRadius + padding.top + padding.bottom;
+                        scope.render(scope.technologies);
+                    });
                 }
             };
         }]);
