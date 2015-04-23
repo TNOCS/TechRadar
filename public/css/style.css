@@ -30,8 +30,15 @@ body {
     padding-top: 50px;
 }
 .item-container{
-  fill:#af7d26;
-  border-color:"black";
+  fill-opacity:0.85;
+}
+.item-container-drop-shadow
+{
+  filter: blur(1px);
+}
+.item-id{
+  font-size:12px;
+  font-weight:800;
 }
 .starter-template {
     background: lightgray;
@@ -40,11 +47,11 @@ body {
 }
 .shortTitle {
     fill: black;
-    font-size: 10px;
+    font-size: 10px;    
 }
 .shortTitle:hover {
-    font-weight: bold;
-    fill: yellow;
+    font-weight: 900;
+    fill: black;
     font-size: 10px;
     z-index: 100;
 }
