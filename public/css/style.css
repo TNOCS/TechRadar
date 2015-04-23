@@ -37,7 +37,7 @@ body {
   filter: blur(1px);
 }
 .item-id{
-  font-size:12px;
+  font-size:14px;
   font-weight:800;
 }
 .starter-template {
@@ -47,7 +47,7 @@ body {
 }
 .shortTitle {
     fill: black;
-    font-size: 10px;    
+    font-size: 10px;
 }
 .shortTitle:hover {
     font-weight: 900;

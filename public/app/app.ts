@@ -12,6 +12,10 @@ module App {
         private public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true';
         private technologies: Technology[];
 
+        public options : TechRadar.RenderOptions;
+
+        public filter : Function;
+
         // It provides $injector with information about dependencies to be injected into constructor
         // it is better to have it close to the constructor, because the parameters must match in count and type.
         // See http://docs.angularjs.org/guide/di
@@ -29,6 +33,7 @@ module App {
             private spreadsheetService : csComp.Services.SpreadsheetService
             ) {
             $scope.vm = this;
+            this.options = { prio : { 1 : true, 2: true, 3:false} };
 
             spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
                 //this.showInfo(spreadsheet);
@@ -42,7 +47,7 @@ module App {
 
                     var deltaTimeString = row.DeltaTime;
                     var deltaCatString  = row.DeltaCategory;
-                    var priority = row.Priority;
+                    var priority = parseInt(row.Priority.toString());
                     var deltaTime     = 0,
                         deltaCategory = 0;
                     if (typeof deltaTimeString === 'string') {

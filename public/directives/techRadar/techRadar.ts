@@ -21,12 +21,15 @@ module TechRadar {
     export interface RenderOptions {
         time?    : string;
         category?: string;
+        prio?   : {[prio:number]:boolean}
+
     }
 
 
 
     export interface ITechRadarChartScope extends ng.IScope {
         technologies: Technology[];
+        options : RenderOptions;
         /**
          * Start angle in degrees (0 degrees is North).
          * @type {number}
@@ -59,6 +62,7 @@ module TechRadar {
                 transclude: true,
                 scope: {
                     technologies: '=',  // = means that we use angular to evaluate the expression,
+                    options:'=',
                     startangle  : '@',  // In degrees, 0 is north
                     endangle    : '@',
                     radius      : '@',  // the value is used as is
@@ -109,10 +113,10 @@ module TechRadar {
 });
 
                     var priorityFill = ((prio)=>{
-                      switch (prio){
-                        case "1" : return "#F39092"; break;
-                        case "2" : return "#9EBACB"; break;
-                        case "3" : return "#F5DC8F"; break;
+                      switch (parseInt(prio)){
+                        case 1 : return "#F39092"; break;
+                        case 2 : return "#9EBACB"; break;
+                        case 3 : return "#F5DC8F"; break;
                         default: return  "#DFE0DC"; break;
                       }
                     });
@@ -154,15 +158,15 @@ module TechRadar {
                         } = {};
 
                         var filteredTechnologies: Technology[] = [];
-                        if (renderOptions && (renderOptions.time || renderOptions.category)) {
+
                             technologies.forEach((t) => {
-                                if ((renderOptions.time && t.timePeriod === renderOptions.time) ||
-                                    (renderOptions.category && t.category === renderOptions.category) )
-                                    filteredTechnologies.push(t);
+                              var include = true;
+                              if (renderOptions.time && t.timePeriod != renderOptions.time) include = false;
+                              if (renderOptions.category && t.category != renderOptions.category) include = false;
+                              //if (renderOptions.prio && !renderOptions.prio[t.priority]) include = false;
+                              if (include) filteredTechnologies.push(t);
                             });
-                        } else {
-                            filteredTechnologies = technologies;
-                        }
+
 
                         filteredTechnologies = filteredTechnologies.sort((x:Technology, y:Technology)=>{
                             return d3.ascending(x.priority, y.priority);
@@ -224,7 +228,8 @@ module TechRadar {
                                 .attr("class", "period")
                                 .text(period)
                                 .on("click", (t: Technology, i: number) => {
-                                    scope.render(technologies, { time: period });
+                                  scope.options.time = period;
+                                    scope.render(technologies, scope.options);
                                 });
                         });
 
@@ -260,7 +265,8 @@ module TechRadar {
                                     sel.moveToFront();
                                 })
                                 .on("click", (t: Technology, i: number) => {
-                                    scope.render(technologies, { category: category });
+                                   scope.options.category = category;
+                                    scope.render(technologies, scope.options);
                                     var sel: any = d3.select(this);
                                     sel.moveToFront();
                                 }
@@ -301,6 +307,7 @@ module TechRadar {
                         var items = elem
                             .enter()
                             .append("g")
+                            .style('display',((t:Technology)=>{ return t.visible ? "block" : "none"}))
                             .attr('class', 'shortTitle');
 
                         items.transition()
@@ -369,7 +376,7 @@ module TechRadar {
                         // Create the short title for each technology
                         items.append("text")
                             .attr("dx", 0)
-                            .attr("dy", 0.2)
+                            .attr("dy", 0.3)
                             .attr("text-anchor", "middle")
                             .attr("font-size", "12px")
                             .text(function(t: Technology, i: number){return t.shortTitle })
@@ -386,23 +393,25 @@ module TechRadar {
                                 .attr("font-family", "FontAwesome")
                                 .text(FontAwesomeUtils.FontAwesomeConverter.convertToCharacter("fa-arrow-circle-o-left"))
                                 .on("click", (t: Technology, i: number) => {
-                                    scope.render(technologies);
+                                  scope.options.time = null;
+                                  scope.options.category = null;
+                                    scope.render(technologies,scope.options);
                                 });
                         }
                     };
 
                     scope.$watch('technologies', function (newVal, oldVal) {
-                        if (newVal !== oldVal) scope.render(scope.technologies);
+                        if (newVal !== oldVal) scope.render(scope.technologies,scope.options);
                     });
 
-                    if (scope.technologies) scope.render(scope.technologies);
+                    if (scope.technologies) scope.render(scope.technologies,scope.options);
 
                     d3.select(window).on('resize', () => {
                         console.log("Resize");
                         outerRadius = scope.radius || Math.floor($(element[0]).parent().width()/2) - padding.left - padding.right;
                         actualWidth  = 2 * outerRadius + padding.left + padding.right;
                         actualHeight = 2 * outerRadius + padding.top  + padding.bottom;
-                        scope.render(scope.technologies);
+                        scope.render(scope.technologies,scope.options);
                     });
 
 

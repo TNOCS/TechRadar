@@ -12,6 +12,7 @@ module TechRadar {
             public title         : string,
             public subTitle      : string,
             public text          : string,
-            public media         : string) {}
+            public media         : string,
+            public visible       : boolean = true) {}
     }
 }
