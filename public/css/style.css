@@ -29,6 +29,10 @@ html, body, #container {
 body {
     padding-top: 50px;
 }
+.item-container{
+  fill:#af7d26;
+  border-color:"black";
+}
 .starter-template {
     background: lightgray;
     padding: 20px 15px;
@@ -36,12 +40,12 @@ body {
 }
 .shortTitle {
     fill: black;
-    font-size: 1em;
+    font-size: 10px;
 }
 .shortTitle:hover {
     font-weight: bold;
     fill: yellow;
-    font-size: 1.2em;
+    font-size: 10px;
     z-index: 100;
 }
 .period  {

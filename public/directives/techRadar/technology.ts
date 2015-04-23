@@ -1,6 +1,8 @@
 module TechRadar {
     export class Technology {
         constructor(
+            public id : number,
+            public priority : number,
             public category      : string,
             public thumbnail     : string,
             public timePeriod    : string,

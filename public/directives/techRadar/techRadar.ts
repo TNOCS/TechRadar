@@ -82,6 +82,14 @@ module TechRadar {
                       });
                     };
 
+                    var priorityColor = ((prio)=>{
+                      switch (prio){
+                        case "1" : return "red"; break;
+                        case "2" : return "blue"; break;
+                        default: return  "gray"; break;
+                      }
+                    })
+
                     scope.render = function(technologies: Technology[], renderOptions?: RenderOptions) {
                         d3.select(element[0]).selectAll("*").remove();
                         var chart = d3.select(element[0])
@@ -119,6 +127,10 @@ module TechRadar {
                         } else {
                             filteredTechnologies = technologies;
                         }
+
+                        filteredTechnologies = filteredTechnologies.sort((x:Technology, y:Technology)=>{
+                            return d3.ascending(x.priority, y.priority);
+                        });
 
                         // Create the set of possible colors
                         var color = d3.scale.category20c();
@@ -213,6 +225,8 @@ module TechRadar {
                                 })
                                 .on("click", (t: Technology, i: number) => {
                                     scope.render(technologies, { category: category });
+                                    var sel: any = d3.select(this);
+                                    sel.moveToFront();
                                 }
                             );
 
@@ -254,8 +268,8 @@ module TechRadar {
                             .attr('class', 'shortTitle');
 
                         items.transition()
-                            .delay(function(d,i) { return i*10})
-                            .duration(1500)
+                            .delay(function(d,i) { return i*5})
+                            .duration(500)
                             .attr("transform", function(t: Technology) {
                                 var categoryInfo = categoriesInfo[t.category];
                                 var periodInfo   = periodsInfo[t.timePeriod];
@@ -266,24 +280,44 @@ module TechRadar {
                                 return "translate(" + x + "," + y + ")";
                             });
 
-                        items.on("mouseover", function(t: Technology, i: number) {
+                        items.on("click", function(t: Technology, i: number) {
                                 var sel: any = d3.select(this);
                                 sel.moveToFront();
                                 bus.publish('technology', 'selected', t);
                             });
 
+                       // add background circle
+                       items.append("circle")
+                           .attr("cx", "0")
+                           .attr("cy", "0")
+                           .attr("class","item-container")
+                           .style("fill",function(t:Technology) { return priorityColor(t.priority)})
+                           .attr("r", 25);
+
                         // Create the Font Awesome icon
+                        // items.append("text")
+                        //     .attr("font-family", "FontAwesome")
+                        //     .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
+                        //     .attr("fill", "black")
+                        //     .attr("text-anchor", "end")
+                        //     .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
+                        //     .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
+
+
+                        // show id
                         items.append("text")
-                            .attr("font-family", "FontAwesome")
+                            .attr("dx", 0)
+                            .attr("dy", -5)
+                            .attr("text-anchor", "middle")
                             .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
-                            .attr("fill", "black")
-                            .attr("text-anchor", "end")
-                            .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
-                            .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
+                            .text(function(t: Technology, i: number){return t.id });
+
 
                         // Create the short title for each technology
                         items.append("text")
-                            .attr("dx", 5)
+                            .attr("dx", 0)
+                            .attr("dy", 5)
+                            .attr("text-anchor", "middle")
                             .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
                             .text(function(t: Technology, i: number){return t.shortTitle });
 

@@ -3,6 +3,7 @@ module csComp.Services {
 
     export  interface ISpreadsheetRow {
         Category:      string,
+        Priority:      number,
         Thumbnail:     string,
         TimeCategory:  string,
         DeltaTime:     string | number,

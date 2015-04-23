@@ -35,12 +35,14 @@ module App {
                 //busService.publish('spreadsheet', 'newSheet', spreadsheet);
 
                 this.technologies = [];
+                var id = 1;
                 spreadsheet.forEach((row) => {
                     //console.log(row.Category);
                     //console.log(row.Title);
 
                     var deltaTimeString = row.DeltaTime;
                     var deltaCatString  = row.DeltaCategory;
+                    var priority = row.Priority;
                     var deltaTime     = 0,
                         deltaCategory = 0;
                     if (typeof deltaTimeString === 'string') {
@@ -53,8 +55,9 @@ module App {
                     } else {
                         deltaCategory = deltaCatString;
                     }
-                    var technology = new Technology(row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media);
+                    var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media);
                     this.technologies.push(technology);
+                    id+=1;
                     //var technology = row.
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
