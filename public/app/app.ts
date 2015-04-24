@@ -15,6 +15,8 @@ module App {
         public options : TechRadar.RenderOptions;
 
         public filter : Function;
+        private slider : any;
+        private activeFocus : number;
 
         // It provides $injector with information about dependencies to be injected into constructor
         // it is better to have it close to the constructor, because the parameters must match in count and type.
@@ -25,6 +27,19 @@ module App {
             'sheetService'
         ];
 
+        public setFocus(t : Technology)
+        {
+          this.technologies.forEach((ts)=>ts.focus = false);
+          t.focus = true;
+          var est = $("#tech-" + t.id);
+          var list = $("#tslist");
+          //console.log(list.index(est));
+
+          this.slider.gotoSlide(t.id);
+          this.activeFocus = t.id;
+          if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
+        }
+
         // dependencies are injected via AngularJS $injector
         // controller's name is registered in Application.ts and specified from ng-controller attribute in index.html
         constructor(
@@ -34,6 +49,16 @@ module App {
             ) {
             $scope.vm = this;
             this.options = { prio : { 1 : true, 2: true, 3:false} };
+            busService.subscribe("technology",(action:string,t:Technology)=>
+            {
+              switch(action)
+              {
+                case "selected":
+                  this.setFocus(t);
+                  break;
+              }
+
+            });
 
             spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
                 //this.showInfo(spreadsheet);
@@ -48,6 +73,14 @@ module App {
                     var deltaTimeString = row.DeltaTime;
                     var deltaCatString  = row.DeltaCategory;
                     var priority = parseInt(row.Priority.toString());
+                    var color;
+                    switch (priority)
+                    {
+                      case 1 : color= "#F39092"; break;
+                      case 2 : color= "#9EBACB"; break;
+                      case 3 : color= "#F5DC8F"; break;
+                      default: color=  "#DFE0DC"; break;
+                    }
                     var deltaTime     = 0,
                         deltaCategory = 0;
                     if (typeof deltaTimeString === 'string') {
@@ -60,13 +93,25 @@ module App {
                     } else {
                         deltaCategory = deltaCatString;
                     }
-                    var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media);
+                    var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
                     this.technologies.push(technology);
                     id+=1;
                     //var technology = row.
                 });
-                if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
+                if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
+                  this.$scope.$apply();
+                  this.slider = <any>$(".ts");
+                  this.slider.itemslide(
+                    {disable_autowidth : true }
+                  );
+                 }
             });
+        }
+
+        private focus(t : Technology)
+        {
+          this.busService.publish("technology","selected",t);
+          this.setFocus(t);
         }
 
         /**

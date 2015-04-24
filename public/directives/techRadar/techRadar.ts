@@ -332,6 +332,7 @@ module TechRadar {
                             items.on("mouseover", function(t: Technology, i: number) {
                                     var sel: any = d3.select(this);
                                     sel.moveToFront();
+                                    //bus.publish('technology', 'radarfocus', t);
                                 });
 
                       // add drop shadow circle
@@ -349,7 +350,7 @@ module TechRadar {
                            .attr("cx", "0")
                            .attr("cy", "0")
                            .attr("class","item-container")
-                           .style("fill",function(t:Technology) { return priorityFill(t.priority)})
+                           .style("fill",function(t:Technology) { return t.color;})
                            .style("stroke",function(t:Technology) { return priorityStroke(t.priority)})
                            .attr("r", 25);
 
@@ -398,7 +399,11 @@ module TechRadar {
                                     scope.render(technologies,scope.options);
                                 });
                         }
+
+
                     };
+
+
 
                     scope.$watch('technologies', function (newVal, oldVal) {
                         if (newVal !== oldVal) scope.render(scope.technologies,scope.options);

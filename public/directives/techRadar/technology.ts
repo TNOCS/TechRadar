@@ -13,6 +13,9 @@ module TechRadar {
             public subTitle      : string,
             public text          : string,
             public media         : string,
-            public visible       : boolean = true) {}
+            public color         : string = 'white',
+            public visible       : boolean = true,
+            public focus         : boolean = false
+            ) {}
     }
 }
