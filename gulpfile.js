@@ -18,7 +18,7 @@ var gulp      = require('gulp'),
 gulp.task('debug-built', function() {
     var assets = useref.assets();
 
-    return gulp.src('./src/*.html')
+    return gulp.src('./public/*.html')
         .pipe(assets)
         .pipe(assets.restore())
         .pipe(useref())
