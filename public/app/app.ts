@@ -104,6 +104,28 @@ module App {
                   this.slider.itemslide(
                     {disable_autowidth : true }
                   );
+                  this.busService.publish("technology","selected",this.technologies[0]);
+                  $( "body" ).keydown(( event )=> {
+                    switch ((<any>event.originalEvent).keyIdentifier)
+                    {
+                      case "Home":
+                        this.busService.publish("technology","selected",this.technologies[0]);
+                        break;
+                      case "End":
+                        this.busService.publish("technology","selected",this.technologies[this.technologies.length-1]);
+                          break;
+                      case "Left":
+                        if (this.activeFocus>1) this.busService.publish("technology","selected",this.technologies[this.activeFocus-2]);
+                        break;
+                      case "Right":
+                          if (this.activeFocus<this.technologies.length) this.busService.publish("technology","selected",this.technologies[this.activeFocus]);
+                          break;
+                    }
+
+                      if ( event.which == 13 ) {
+                          event.preventDefault();
+                        }
+                      });
                  }
             });
         }
