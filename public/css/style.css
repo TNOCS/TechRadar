@@ -29,12 +29,10 @@ html, body, #container {
 body {
     padding-top: 50px;
 }
-
 .technology-list-container{
   background:grey;
   height:100px;
 }
-
 .ts {
     margin: 0;
     padding: 0;
@@ -46,12 +44,10 @@ body {
     -ms-transform-style: preserve-3d;
     transform-style: preserve-3d;
 }
-
 .ts li {
     float: left;
     width:200px;
 }
-
 .ts-item
 {
   background: white;
@@ -68,7 +64,6 @@ body {
   background:black;
   color:white;
   padding-right:5px;
-
 }
 .list-title
 {
@@ -77,17 +72,13 @@ body {
   margin-top:10px;
   font-weight:500;
 }
-
 .item-container{
   fill-opacity:0.85;
 }
-
 .item-container:hover{
   fill:"red";
 }
-
 .item-container-drop-shadow
-
 {
   filter: blur(1px);
 }
@@ -101,6 +92,7 @@ body {
     text-align: center;
 }
 .shortTitle {
+    cursor: pointer;
     fill: black;
     font-size: 10px;
 }

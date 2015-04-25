@@ -1,3 +1,22 @@
+interface String {
+    trunc(length: number): String;
+}
+
+//    declare var String;
+
+/**
+ * Truncate the string.
+ * @param n: string length
+ */
+String.prototype.trunc = function(n) {
+    'use strict'
+  // If n=6 and
+  //   length > 6, substr(0,n-2) + ...
+  return this.length <= n
+    ? this.substr(0, n)
+    : this.substr(0, n-1) + '\u2026';
+};
+
 module TechRadar {
     'use strict'
     /**
@@ -16,16 +35,12 @@ module TechRadar {
         myModule = angular.module(moduleName, []);
     }
 
-    declare var String;
-
     export interface RenderOptions {
         time?    : string;
         category?: string;
         prio?   : {[prio:number]:boolean}
-
     }
-
-
+              //   length <= 6, do not change, substr(0,n-1)
 
     export interface ITechRadarChartScope extends ng.IScope {
         technologies: Technology[];
@@ -88,29 +103,29 @@ module TechRadar {
                       });
                     };
 
-                    var wrap = ((text, width)=>{
-  text.each(function() {
-    var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 0.9, // ems
-        y = text.attr("y"),
-        dy = parseFloat(text.attr("dy")),
-        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-    while (word = words.pop()) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if ((<any>tspan.node()).getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-      }
-    }
-  });
-});
+                    var wrap = ((text, width) => {
+                        text.each(function() {
+                            var text = d3.select(this),
+                                words = text.text().split(/\s+/).reverse(),
+                                word,
+                                line = [],
+                                lineNumber = 0,
+                                lineHeight = 0.9, // ems
+                                y = text.attr("y"),
+                                dy = parseFloat(text.attr("dy")),
+                                tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+                            while (word = words.pop()) {
+                                line.push(word);
+                                tspan.text(line.join(" "));
+                                if ((<any>tspan.node()).getComputedTextLength() > width) {
+                                    line.pop();
+                                    tspan.text(line.join(" "));
+                                    line = [word];
+                                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                                }
+                            }
+                        });
+                    });
 
                     var priorityFill = ((prio)=>{
                       switch (parseInt(prio)){
@@ -159,14 +174,13 @@ module TechRadar {
 
                         var filteredTechnologies: Technology[] = [];
 
-                            technologies.forEach((t) => {
-                              var include = true;
-                              if (renderOptions.time && t.timePeriod != renderOptions.time) include = false;
-                              if (renderOptions.category && t.category != renderOptions.category) include = false;
-                              //if (renderOptions.prio && !renderOptions.prio[t.priority]) include = false;
-                              if (include) filteredTechnologies.push(t);
-                            });
-
+                        technologies.forEach((t) => {
+                          var include = true;
+                          if (renderOptions.time && t.timePeriod != renderOptions.time) include = false;
+                          if (renderOptions.category && t.category != renderOptions.category) include = false;
+                          //if (renderOptions.prio && !renderOptions.prio[t.priority]) include = false;
+                          if (include) filteredTechnologies.push(t);
+                        });
 
                         filteredTechnologies = filteredTechnologies.sort((x:Technology, y:Technology)=>{
                             return d3.ascending(x.priority, y.priority);
@@ -329,14 +343,13 @@ module TechRadar {
                                 bus.publish('technology', 'selected', t);
                             });
 
-                            items.on("mouseover", function(t: Technology, i: number) {
-                                    var sel: any = d3.select(this);
-                                    sel.moveToFront();
-                                    //bus.publish('technology', 'radarfocus', t);
-                                });
+                        items.on("mouseover", function(t: Technology, i: number) {
+                                var sel: any = d3.select(this);
+                                sel.moveToFront();
+                                //bus.publish('technology', 'radarfocus', t);
+                            });
 
                       // add drop shadow circle
-                      // add background circle
                       items.append("circle")
                           .attr("cx", "2")
                           .attr("cy", "2")
@@ -350,38 +363,37 @@ module TechRadar {
                            .attr("cx", "0")
                            .attr("cy", "0")
                            .attr("class","item-container")
-                           .style("fill",function(t:Technology) { return t.color;})
-                           .style("stroke",function(t:Technology) { return priorityStroke(t.priority)})
+                           .style("fill", function(t: Technology) { return t.color;})
+                           .style("stroke", function(t: Technology) { return priorityStroke(t.priority)})
                            .attr("r", 25);
-
-                        // Create the Font Awesome icon
-                        // items.append("text")
-                        //     .attr("font-family", "FontAwesome")
-                        //     .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
-                        //     .attr("fill", "black")
-                        //     .attr("text-anchor", "end")
-                        //     .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
-                        //     .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
-
 
                         // show id
                         items.append("text")
                             .attr("dx", 0)
-                            .attr("dy", -8)
+                            .attr("dy", '-0.5em')
                             .attr("text-anchor", "middle")
                             .attr("class","item-id")
                             .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
-                            .text(function(t: Technology, i: number){return t.id });
-
+                            .text(function(t: Technology, i: number) { return t.id });
 
                         // Create the short title for each technology
                         items.append("text")
                             .attr("dx", 0)
-                            .attr("dy", 0.3)
+                            .attr("dy", '0.5em')
                             .attr("text-anchor", "middle")
                             .attr("font-size", "12px")
-                            .text(function(t: Technology, i: number){return t.shortTitle })
-                            .call(wrap, 50);
+                            .text(function(t: Technology, i: number) { return t.shortTitle.trunc(7) });
+                            //.call(wrap, 50);
+
+                        // Create the Font Awesome icon
+                        items.append("text")
+                            .attr("dy", '1.7em')
+                            .attr("font-family", "FontAwesome")
+                            //.attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
+                            .attr("fill", "black")
+                            .attr("text-anchor", "middle")
+                            .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
+                            .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
 
                         // In case we are looking at details, add a back arrow to return to the main view
                         if (renderOptions && (renderOptions.time || renderOptions.category)) {
