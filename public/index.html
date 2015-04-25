@@ -68,7 +68,7 @@
           <li data-ng-repeat="t in vm.technologies | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
             <div class="ts-item" ng-class="{'focus-opacity' :  t.focus}"  style="background:{{t.color}}">
             <div class="list-id">{{t.id}}</div>
-            <div class="list-title">{{t.title}}</div>
+            <div class="list-title">{{t.title.trunc(44)}}</div>
           </div>
           </li>
 
