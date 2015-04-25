@@ -55,9 +55,9 @@ module TechRadar {
          * @type {[type]}
          */
         endangle?   : number;
-        radius?: number;
+        radius?     : number;
         innerradius?: number;
-        padding?     : { top: number; right: number; bottom: number; left: number; };
+        margin?     : { top: number; right: number; bottom: number; left: number; };
         render(technologies: Technology[], renderOptions?: RenderOptions): void;
     }
 
@@ -77,7 +77,7 @@ module TechRadar {
                 transclude: true,
                 scope: {
                     technologies: '=',  // = means that we use angular to evaluate the expression,
-                    options:'=',
+                    options     : '=',
                     startangle  : '@',  // In degrees, 0 is north
                     endangle    : '@',
                     radius      : '@',  // the value is used as is
@@ -86,19 +86,20 @@ module TechRadar {
                 },
                 link: function (scope: ITechRadarChartScope, element, attrs) {
                     const rad2deg = 180 / Math.PI;
-                    var padding          = scope.padding    || { top: 15, right: 25, bottom: 15, left: 15 };
-                    var outerRadius      = scope.radius     || Math.floor($(element[0]).parent().width()/2) - padding.left - padding.right;
+                    var parent    = $(element[0]).parent();
+                    var margin           = scope.margin     || { top: 15, right: 25, bottom: 15, left: 25 };
+                    var outerRadius      = scope.radius     || Math.floor(parent.width()/2) - margin.left - margin.right;
                     var innerRadius      = scope.innerradius|| 75;
                     var startAngle       = scope.startangle ? scope.startangle / rad2deg : -Math.PI/2;
                     var endAngle         = scope.endangle   ? scope.endangle   / rad2deg :  Math.PI/2;
                     var cursorTextHeight = 12;// + (showAxis ? 5 : 0); // leave room for the cursor text (timestamp | measurement)
 
-                    var actualWidth  = 2 * outerRadius + padding.left + padding.right;
-                    var actualHeight = 2 * outerRadius + padding.top  + padding.bottom;
+                    var actualWidth  = 2 * outerRadius + margin.left + margin.right;
+                    var actualHeight = 2 * outerRadius + margin.top  + margin.bottom;
 
                     // http://stackoverflow.com/questions/14167863/how-can-i-bring-a-circle-to-the-front-with-d3
                     d3.selection.prototype.moveToFront = function() {
-                      return this.each(function(){
+                      return this.each(function() {
                         this.parentNode.appendChild(this);
                       });
                     };
@@ -152,7 +153,7 @@ module TechRadar {
                             .attr('width', actualWidth)
                             .attr('height', actualHeight)
                             .append("g")
-                            .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+                            .attr("transform", "translate(" + actualWidth/2 + "," + actualHeight/2 + ")");
 
                         var categories  : string[] = [];
                         var categoriesInfo: {
@@ -182,9 +183,10 @@ module TechRadar {
                           if (include) filteredTechnologies.push(t);
                         });
 
-                        filteredTechnologies = filteredTechnologies.sort((x:Technology, y:Technology)=>{
-                            return d3.ascending(x.priority, y.priority);
-                        });
+                        // Commented since changing the order of the technologies also effects the order of the time categories.
+                        // filteredTechnologies = filteredTechnologies.sort((x:Technology, y:Technology)=>{
+                        //     return d3.ascending(x.priority, y.priority);
+                        // });
 
                         // Create the set of possible colors
                         var color = d3.scale.category20c();
@@ -241,6 +243,10 @@ module TechRadar {
                                 .attr("text-anchor", "end")
                                 .attr("class", "period")
                                 .text(period)
+                                .on("mouseover", function(t: Technology, i: number) {
+                                    var sel: any = d3.select(this);
+                                    sel.moveToFront();
+                                })
                                 .on("click", (t: Technology, i: number) => {
                                   scope.options.time = period;
                                     scope.render(technologies, scope.options);
@@ -281,8 +287,8 @@ module TechRadar {
                                 .on("click", (t: Technology, i: number) => {
                                    scope.options.category = category;
                                     scope.render(technologies, scope.options);
-                                    var sel: any = d3.select(this);
-                                    sel.moveToFront();
+                                    // var sel: any = d3.select(this);
+                                    // sel.moveToFront();
                                 }
                             );
 
@@ -338,15 +344,14 @@ module TechRadar {
                             });
 
                         items.on("click", function(t: Technology, i: number) {
-                                var sel: any = d3.select(this);
-                                sel.moveToFront();
+                                // var sel: any = d3.select(this);
+                                // sel.moveToFront();
                                 bus.publish('technology', 'selected', t);
                             });
 
                         items.on("mouseover", function(t: Technology, i: number) {
                                 var sel: any = d3.select(this);
                                 sel.moveToFront();
-                                //bus.publish('technology', 'radarfocus', t);
                             });
 
                       // add drop shadow circle
@@ -411,30 +416,23 @@ module TechRadar {
                                     scope.render(technologies,scope.options);
                                 });
                         }
-
-
                     };
 
-
-
                     scope.$watch('technologies', function (newVal, oldVal) {
-                        if (newVal !== oldVal) scope.render(scope.technologies,scope.options);
+                        if (newVal !== oldVal) scope.render(scope.technologies, scope.options);
                     });
 
                     if (scope.technologies) scope.render(scope.technologies,scope.options);
 
                     d3.select(window).on('resize', () => {
                         console.log("Resize");
-                        outerRadius = scope.radius || Math.floor($(element[0]).parent().width()/2) - padding.left - padding.right;
-                        actualWidth  = 2 * outerRadius + padding.left + padding.right;
-                        actualHeight = 2 * outerRadius + padding.top  + padding.bottom;
+                        outerRadius = scope.radius || Math.floor($(element[0]).parent().width()/2) - margin.left - margin.right;
+                        actualWidth  = 2 * outerRadius + margin.left + margin.right;
+                        actualHeight = 2 * outerRadius + margin.top  + margin.bottom;
                         scope.render(scope.technologies,scope.options);
                     });
 
-
                 }
-
-
             }
         }])
 }
