@@ -172,7 +172,12 @@ module TechRadar {
                                 outerRadius: number;
                             }
                         } = {};
-
+                        var catPeriodsInfo: {
+                            [catPeriod: string] : {
+                                index: number;
+                                count: number;
+                            }
+                        } = {};
                         var filteredTechnologies: Technology[] = [];
 
                         technologies.forEach((t) => {
@@ -210,6 +215,11 @@ module TechRadar {
                             } else {
                                 periodsInfo[t.timePeriod].count++;
                             }
+                            var cp = t.category+'-'+t.timePeriod;
+                            if (!catPeriodsInfo.hasOwnProperty(cp))
+                                catPeriodsInfo[cp] = { index: 0, count: 1};
+                            else
+                                catPeriodsInfo[cp].count++;
                         });
 
                         // Draw the rings
@@ -334,9 +344,10 @@ module TechRadar {
                             .delay(function(d,i) { return i*5})
                             .duration(500)
                             .attr("transform", function(t: Technology) {
-                                var categoryInfo = categoriesInfo[t.category];
-                                var periodInfo   = periodsInfo[t.timePeriod];
-                                var angle  = categoryInfo.startAngle + Math.max(0.1, t.relativeAngle || Math.random()) * (categoryInfo.endAngle - categoryInfo.startAngle);
+                                var categoryInfo  = categoriesInfo[t.category];
+                                var periodInfo    = periodsInfo[t.timePeriod];
+                                var catPeriodInfo = catPeriodsInfo[t.category + '-' + t.timePeriod];
+                                var angle  = categoryInfo.startAngle + 0.1 + (catPeriodInfo.index++ / catPeriodInfo.count) * (categoryInfo.endAngle - categoryInfo.startAngle);
                                 var radius = periodInfo.innerRadius  + Math.max(0.1, Math.min(0.9, t.relativeRadius || Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
                                 var x =  Math.sin(angle) * radius;
                                 var y = -Math.cos(angle) * radius;

@@ -7,7 +7,6 @@ module csComp.Services {
         Thumbnail:     string,
         TimeCategory:  string,
         DeltaTime:     string | number,
-        DeltaCategory: string | number,
         ShortTitle:    string,
         Title:         string,
         Text:          string,

@@ -69,9 +69,7 @@ module App {
                 spreadsheet.forEach((row) => {
                     //console.log(row.Category);
                     //console.log(row.Title);
-
                     var deltaTimeString = row.DeltaTime;
-                    var deltaCatString  = row.DeltaCategory;
                     var priority = parseInt(row.Priority.toString());
                     var color;
                     switch (priority)
@@ -88,12 +86,7 @@ module App {
                     } else {
                         deltaTime = deltaTimeString;
                     }
-                    if (typeof deltaCatString === 'string') {
-                        deltaCategory = +deltaCatString.replace(',', '.');
-                    } else {
-                        deltaCategory = deltaCatString;
-                    }
-                    var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
+                    var technology = new Technology(id, priority, row.Category, row.Thumbnail, row.TimeCategory, deltaTime, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
                     this.technologies.push(technology);
                     id+=1;
                     //var technology = row.
@@ -104,7 +97,7 @@ module App {
                   this.slider.itemslide(
                     {disable_autowidth : true }
                   );
-                  this.busService.publish("technology","selected",this.technologies[0]);
+                  this.busService.publish("technology", "selected", this.technologies[0]);
                   $( "body" ).keydown(( event )=> {
                     switch ((<any>event.originalEvent).keyIdentifier)
                     {
@@ -113,19 +106,19 @@ module App {
                         break;
                       case "End":
                         this.busService.publish("technology","selected",this.technologies[this.technologies.length-1]);
-                          break;
+                        break;
                       case "Left":
                         if (this.activeFocus>1) this.busService.publish("technology","selected",this.technologies[this.activeFocus-2]);
                         break;
                       case "Right":
-                          if (this.activeFocus<this.technologies.length) this.busService.publish("technology","selected",this.technologies[this.activeFocus]);
-                          break;
+                        if (this.activeFocus<this.technologies.length) this.busService.publish("technology","selected",this.technologies[this.activeFocus]);
+                        break;
                     }
 
-                      if ( event.which == 13 ) {
-                          event.preventDefault();
-                        }
-                      });
+                    if ( event.which == 13 ) {
+                        event.preventDefault();
+                    }
+                    });
                  }
             });
         }

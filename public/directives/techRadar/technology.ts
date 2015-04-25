@@ -7,7 +7,6 @@ module TechRadar {
             public thumbnail     : string,
             public timePeriod    : string,
             public relativeRadius: number,
-            public relativeAngle : number,
             public shortTitle    : string,
             public title         : string,
             public subTitle      : string,
