@@ -57,7 +57,6 @@ module App {
                   this.setFocus(t);
                   break;
               }
-
             });
 
             spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
@@ -82,24 +81,20 @@ module App {
                     } else {
                         deltaTime = deltaTimeString;
                     }
-                    if (priority < 5)
-                    {
-                      var technology = new Technology(
-                          id,
-                          priority,
-                          row.Category,
-                          row.Thumbnail,
-                          row.TimeCategory,
-                          deltaTime,
-                          row.ShortTitle,
-                          row.Title,
-                          row.Subtitle,
-                          row.Text,
-                          row.Media,
-                          color);
-                      this.technologies.push(technology);
-                      id++;
-                    }
+                    var technology = new Technology(
+                      id++,
+                      priority,
+                      row.Category,
+                      row.Thumbnail,
+                      row.TimeCategory,
+                      deltaTime,
+                      row.ShortTitle,
+                      row.Title,
+                      row.Subtitle,
+                      row.Text,
+                      row.Media,
+                      color);
+                    this.technologies.push(technology);
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();

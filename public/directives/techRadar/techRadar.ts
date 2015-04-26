@@ -43,8 +43,10 @@ module TechRadar {
               //   length <= 6, do not change, substr(0,n-1)
 
     export interface ITechRadarChartScope extends ng.IScope {
-        technologies: Technology[];
-        options : RenderOptions;
+        technologies  : Technology[];
+        options       : RenderOptions;
+        searchterm    : string;
+        prioritylevel : number;
         /**
          * Start angle in degrees (0 degrees is North).
          * @type {number}
@@ -59,6 +61,7 @@ module TechRadar {
         innerradius?: number;
         margin?     : { top: number; right: number; bottom: number; left: number; };
         render(technologies: Technology[], renderOptions?: RenderOptions): void;
+        setItemVisibility(technologies: Technology, isVisible: boolean): void;
     }
 
     /**
@@ -76,13 +79,15 @@ module TechRadar {
                 restrict: 'EA',       // E = elements, other options are A=attributes and C=classes
                 transclude: true,
                 scope: {
-                    technologies: '=',  // = means that we use angular to evaluate the expression,
-                    options     : '=',
-                    startangle  : '@',  // In degrees, 0 is north
-                    endangle    : '@',
-                    radius      : '@',  // the value is used as is
-                    innerradius : '@',
-                    margin      : '@'
+                    technologies : '=',  // = means that we use angular to evaluate the expression,
+                    options      : '=',
+                    searchterm   : '=',
+                    prioritylevel: '=',
+                    startangle   : '@',  // In degrees, 0 is north
+                    endangle     : '@',
+                    radius       : '@',  // the value is used as is
+                    innerradius  : '@',
+                    margin       : '@'
                 },
                 link: function (scope: ITechRadarChartScope, element, attrs) {
                     const rad2deg = 180 / Math.PI;
@@ -176,6 +181,7 @@ module TechRadar {
                             [catPeriod: string] : {
                                 index: number;
                                 count: number;
+                                lastUsedRadius: number;
                             }
                         } = {};
                         var filteredTechnologies: Technology[] = [];
@@ -217,7 +223,7 @@ module TechRadar {
                             }
                             var cp = t.category+'-'+t.timePeriod;
                             if (!catPeriodsInfo.hasOwnProperty(cp))
-                                catPeriodsInfo[cp] = { index: 0, count: 1};
+                                catPeriodsInfo[cp] = { index: 0, count: 1, lastUsedRadius: 0 };
                             else
                                 catPeriodsInfo[cp].count++;
                         });
@@ -348,7 +354,10 @@ module TechRadar {
                                 var periodInfo    = periodsInfo[t.timePeriod];
                                 var catPeriodInfo = catPeriodsInfo[t.category + '-' + t.timePeriod];
                                 var angle  = categoryInfo.startAngle + 0.1 + (catPeriodInfo.index++ / catPeriodInfo.count) * (categoryInfo.endAngle - categoryInfo.startAngle);
-                                var radius = periodInfo.innerRadius  + Math.max(0.1, Math.min(0.9, t.relativeRadius || Math.random())) * (periodInfo.outerRadius - periodInfo.innerRadius);
+                                if (!t.relativeRadius)
+                                    t.relativeRadius = catPeriodInfo.lastUsedRadius < 0.5 ? 0.25 : 0.75;
+                                var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, t.relativeRadius)) * (periodInfo.outerRadius - periodInfo.innerRadius);
+                                catPeriodInfo.lastUsedRadius = t.relativeRadius;
                                 var x =  Math.sin(angle) * radius;
                                 var y = -Math.cos(angle) * radius;
                                 return "translate(" + x + "," + y + ")";
@@ -367,6 +376,7 @@ module TechRadar {
 
                       // add drop shadow circle
                       items.append("circle")
+                          .attr("id", function(t: Technology) { return "shadow" + t.id })
                           .attr("cx", "2")
                           .attr("cy", "2")
                           .attr("class","item-container-drop-shadow")
@@ -376,6 +386,7 @@ module TechRadar {
 
                        // add background circle
                        items.append("circle")
+                           .attr("id", function(t: Technology) { return "circle" + t.id })
                            .attr("cx", "0")
                            .attr("cy", "0")
                            .attr("class","item-container")
@@ -384,16 +395,14 @@ module TechRadar {
                            .attr("r", 25);
 
                         items.append("text")
+                            .attr("id", function(t: Technology) { return "icon" + t.id })
                             .attr("font-family", "FontAwesome")
-                                .attr("dx", 0)
+                            .attr("dx", 0)
                             .attr("dy", '-0.5em')
-                                .attr("text-anchor", "middle")
+                            .attr("text-anchor", "middle")
                             .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
-                            .text(function(t: Technology, i: number) { return t.id })
-
                             .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
                             .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
-
 
                         // show id
                         // items.append("text")
@@ -406,6 +415,7 @@ module TechRadar {
 
                         // Create the short title for each technology
                         items.append("text")
+                            .attr("id", function(t: Technology) { return "text" + t.id })
                             .attr("dx", 0)
                             .attr("dy", '0.5em')
                             .attr("text-anchor", "middle")
@@ -444,6 +454,29 @@ module TechRadar {
                     scope.$watch('technologies', function (newVal, oldVal) {
                         if (newVal !== oldVal) scope.render(scope.technologies, scope.options);
                     });
+
+                    scope.$watch('searchterm', function (newVal, oldVal) {
+                        if (newVal === oldVal) return;
+                        var searchText = scope.searchterm.toLowerCase();
+                        scope.technologies.forEach((t) => {
+                            scope.setItemVisibility(t, scope.searchterm === null || scope.searchterm.length === 0 || JSON.stringify(t).toLowerCase().indexOf(searchText) > 0);
+                        });
+                    });
+
+                    scope.$watch('prioritylevel', function (newVal, oldVal) {
+                        if (newVal === oldVal) return;
+                        scope.technologies.forEach((t) => {
+                            scope.setItemVisibility(t, scope.searchterm === null || t.priority <= scope.prioritylevel );
+                        });
+                    });
+
+                    scope.setItemVisibility = function(t: Technology, isVisible: boolean) {
+                        var showOrHide = isVisible ? "visible" : "hidden";
+                        d3.select("#shadow" + t.id).attr("visibility", showOrHide);
+                        d3.select("#circle" + t.id).attr("visibility", showOrHide);
+                        d3.select("#icon" + t.id).attr("visibility", showOrHide);
+                        d3.select("#text" + t.id).attr("visibility", showOrHide);
+                    }
 
                     if (scope.technologies) scope.render(scope.technologies,scope.options);
 
