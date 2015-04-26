@@ -61,9 +61,6 @@ module App {
             });
 
             spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
-                //this.showInfo(spreadsheet);
-                //busService.publish('spreadsheet', 'newSheet', spreadsheet);
-
                 this.technologies = [];
                 var id = 1;
                 spreadsheet.forEach((row) => {
@@ -78,31 +75,36 @@ module App {
                       case 2 : color= "#9EBACB"; break;
                       case 3 : color= "#F5DC8F"; break;
                       case 4 : color=  "#DFE0DC"; break;
-
                     }
-                    var deltaTime     = 0,
-                        deltaCategory = 0;
+                    var deltaTime     = 0;
                     if (typeof deltaTimeString === 'string') {
                         deltaTime = +deltaTimeString.replace(',', '.');
                     } else {
                         deltaTime = deltaTimeString;
                     }
-                    //var technology = new Technology(id, priority, row.Category, row.Thumbnail, row.TimeCategory, deltaTime, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
-                    if (priority<5)
+                    if (priority < 5)
                     {
-                      var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
+                      var technology = new Technology(
+                          id,
+                          priority,
+                          row.Category,
+                          row.Thumbnail,
+                          row.TimeCategory,
+                          deltaTime,
+                          row.ShortTitle,
+                          row.Title,
+                          row.Subtitle,
+                          row.Text,
+                          row.Media,
+                          color);
                       this.technologies.push(technology);
-                      id+=1;
+                      id++;
                     }
-
-                    //var technology = row.
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();
                   this.slider = <any>$(".ts");
-                  this.slider.itemslide(
-                    {disable_autowidth : true }
-                  );
+                  this.slider.itemslide( { disable_autowidth : true } );
                   this.busService.publish("technology", "selected", this.technologies[0]);
                   $( "body" ).keydown(( event )=> {
                     switch ((<any>event.originalEvent).keyIdentifier)
@@ -114,7 +116,7 @@ module App {
                         this.busService.publish("technology","selected",this.technologies[this.technologies.length-1]);
                         break;
                       case "Left":
-                        if (this.activeFocus>1) this.busService.publish("technology","selected",this.technologies[this.activeFocus-2]);
+                        if (this.activeFocus > 1) this.busService.publish("technology","selected",this.technologies[this.activeFocus-2]);
                         break;
                       case "Right":
                         if (this.activeFocus<this.technologies.length) this.busService.publish("technology","selected",this.technologies[this.activeFocus]);
