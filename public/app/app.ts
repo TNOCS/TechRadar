@@ -79,7 +79,8 @@ module App {
                       case 1 : color= "#F39092"; break;
                       case 2 : color= "#9EBACB"; break;
                       case 3 : color= "#F5DC8F"; break;
-                      default: color=  "#DFE0DC"; break;
+                      case 4 : color=  "#DFE0DC"; break;
+
                     }
                     var deltaTime     = 0,
                         deltaCategory = 0;
@@ -93,9 +94,13 @@ module App {
                     } else {
                         deltaCategory = deltaCatString;
                     }
-                    var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
-                    this.technologies.push(technology);
-                    id+=1;
+                    if (priority<5)
+                    {
+                      var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
+                      this.technologies.push(technology);
+                      id+=1;
+                    }
+
                     //var technology = row.
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {

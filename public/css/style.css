@@ -102,7 +102,9 @@ body {
 }
 .shortTitle {
     fill: black;
-    font-size: 10px;
+    font-weight:900;
+    font-size: 12px;
+    letter-spacing: -1px;
 }
 .shortTitle:hover {
     font-weight: 900;
@@ -144,5 +146,5 @@ body {
     fill: red;
 }
 .thumbnail:hover {
-    fill: yellow;
+    fill: yellow;    
 }

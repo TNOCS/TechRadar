@@ -355,23 +355,26 @@ module TechRadar {
                            .attr("r", 25);
 
                         // Create the Font Awesome icon
-                        // items.append("text")
-                        //     .attr("font-family", "FontAwesome")
-                        //     .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
-                        //     .attr("fill", "black")
-                        //     .attr("text-anchor", "end")
-                        //     .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
-                        //     .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
+                        items.append("text")
+                            .attr("font-family", "FontAwesome")
+                                .attr("dx", 0)
+                                .attr("dy", -8)
+                                .attr("text-anchor", "middle")
+                            .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
+                            .attr("fill", "black")
+                            
+                            .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
+                            .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
 
 
                         // show id
-                        items.append("text")
-                            .attr("dx", 0)
-                            .attr("dy", -8)
-                            .attr("text-anchor", "middle")
-                            .attr("class","item-id")
-                            .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
-                            .text(function(t: Technology, i: number){return t.id });
+                        // items.append("text")
+                        //     .attr("dx", 0)
+                        //     .attr("dy", -8)
+                        //     .attr("text-anchor", "middle")
+                        //     .attr("class","item-id")
+                        //     .attr("font-size", function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToSize(t.thumbnail); })
+                        //     .text(function(t: Technology, i: number){return t.id });
 
 
                         // Create the short title for each technology
