@@ -67,6 +67,9 @@ module App {
                 this.technologies = [];
                 var id = 1;
                 spreadsheet.forEach((row) => {
+                    // check if it's part of previous
+                    if (row.Category!=='')
+                    {
                     //console.log(row.Category);
                     //console.log(row.Title);
                     var deltaTimeString = row.DeltaTime;
@@ -90,10 +93,21 @@ module App {
                     //var technology = new Technology(id, priority, row.Category, row.Thumbnail, row.TimeCategory, deltaTime, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
                     if (priority<5)
                     {
-                      var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
+                      var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Content, color);
                       this.technologies.push(technology);
+                      if (row.ContentType==="") row.ContentType = "text";
+                      if (row.Content!=""){
+                        technology.content.push(new TechRadar.Content(row.ContentType,row.Content));
+                      }
                       id+=1;
                     }
+                  }else
+                  {
+
+                  }
+
+
+
 
                     //var technology = row.
                 });

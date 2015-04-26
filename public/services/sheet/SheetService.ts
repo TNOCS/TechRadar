@@ -11,7 +11,8 @@ module csComp.Services {
         Title:         string,
         Text:          string,
         Subtitle:      string,
-        Media:         string,
+        ContentType:   string,
+        Content: string
     }
 
     /**
