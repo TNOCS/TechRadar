@@ -43,6 +43,15 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
               </ul>
+              <form class="navbar-form navbar-right" style="margin-right:0" role="search">
+                  <div id="scrollable-dropdown-menu" class="form-group has-feedback navbar-right">
+                      <input data-ng-model="searchText"
+                             id="searchbox"
+                             type="text"
+                             class="typeahead form-control">
+                      <span id="searchicon" class="fa fa-search form-control-feedback" style="margin-top: 0.65em"></span>
+                  </div>
+              </form>
             </div><!--/.nav-collapse -->
           </div>
         </nav>
@@ -56,10 +65,10 @@
 
         <div class="technology-list-container">
           <ul class="ts" id="tslist" >
-          <li data-ng-repeat="t in vm.technologies | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
+          <li data-ng-repeat="t in vm.technologies | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
             <div class="ts-item" ng-class="{'focus-opacity' :  t.focus}"  style="background:{{t.color}}">
             <div class="list-id">{{t.id}}</div>
-            <div class="list-title">{{t.title}}</div>
+            <div class="list-title">{{t.title.trunc(44)}}</div>
           </div>
           </li>
 
@@ -69,8 +78,8 @@
 
         <div class="container-fluid" style="padding: 10px 0 0 0">
 
-          <div class="col-md-6" style="width:45%">
-              <tech-radar-chart  technologies="vm.technologies" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
+          <div class="col-md-6">
+              <tech-radar-chart technologies="vm.technologies | filter:searchText" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
           </div>
 
           <div class="col-md-6">
