@@ -43,15 +43,31 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
               </ul>
-              <form class="navbar-form navbar-right" style="margin-right:0" role="search">
+
+              <!-- Filter technologies that are shown -->
+              <form class="navbar-form navbar-right" style="margin-right:0" role="search" class="pull-right">
                   <div id="scrollable-dropdown-menu" class="form-group has-feedback navbar-right">
                       <input data-ng-model="searchText"
                              id="searchbox"
                              type="text"
                              class="typeahead form-control">
-                      <span id="searchicon" class="fa fa-search form-control-feedback" style="margin-top: 0.65em"></span>
+                      <span id="searchicon" class="fa fa-filter form-control-feedback" style="margin-top: 0.65em"></span>
                   </div>
               </form>
+
+              <!-- Specify priority level -->
+              <div ng-init="prioritylevel = 5" style="margin-top: 6px; color: white; text-align: right; text-align: -webkit-right;" class="pull-right">
+                  <div data-ng-switch="prioritylevel">
+                      <b data-ng-switch-when="1">Priority: high </b>
+                      <b data-ng-switch-when="2">Priority: medium-high</b>
+                      <b data-ng-switch-when="3">Priority: medium</b>
+                      <b data-ng-switch-when="4">Priority: low-medium</b>
+                      <b data-ng-switch-when="5">Priority: show all</b>
+                  </div>
+
+                  <rating ng-model="prioritylevel" max="5" state-on="'fa fa-dot-circle-o'" state-off="'fa fa-circle-o'"></rating>
+              </div>
+
             </div><!--/.nav-collapse -->
           </div>
         </nav>
@@ -65,7 +81,7 @@
 
         <div class="technology-list-container">
           <ul class="ts" id="tslist" >
-          <li data-ng-repeat="t in vm.technologies | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
+          <li data-ng-repeat="t in vm.technologies | filter: t.priority <= prioritylevel | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
             <div class="ts-item" ng-class="{'focus-opacity' :  t.focus}"  style="background:{{t.color}}">
             <div class="list-id">{{t.id}}</div>
             <div class="list-title">{{t.title.trunc(44)}}</div>
@@ -79,7 +95,7 @@
         <div class="container-fluid" style="padding: 10px 0 0 0">
 
           <div class="col-md-6">
-              <tech-radar-chart technologies="vm.technologies" searchterm="searchText" prioritylevel="4" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
+              <tech-radar-chart technologies="vm.technologies" searchterm="searchText" prioritylevel="prioritylevel" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
           </div>
 
           <div class="col-md-6">
@@ -94,8 +110,6 @@
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
-        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
         <script src="bower_components/d3/d3.min.js"></script>
         <script src="bower_components/pnotify/pnotify.core.js"></script>

@@ -343,7 +343,8 @@ module TechRadar {
                         var items = elem
                             .enter()
                             .append("g")
-                            .style('display',((t:Technology)=>{ return t.visible ? "block" : "none"}))
+                            .style('display', ((t:Technology) => { return t.visible ? "block" : "none"}))
+                            .attr("id", function(t: Technology) { return "technology_item" + t.id })
                             .attr('class', 'shortTitle');
 
                         items.transition()
@@ -376,7 +377,6 @@ module TechRadar {
 
                       // add drop shadow circle
                       items.append("circle")
-                          .attr("id", function(t: Technology) { return "shadow" + t.id })
                           .attr("cx", "2")
                           .attr("cy", "2")
                           .attr("class","item-container-drop-shadow")
@@ -386,7 +386,6 @@ module TechRadar {
 
                        // add background circle
                        items.append("circle")
-                           .attr("id", function(t: Technology) { return "circle" + t.id })
                            .attr("cx", "0")
                            .attr("cy", "0")
                            .attr("class","item-container")
@@ -395,7 +394,6 @@ module TechRadar {
                            .attr("r", 25);
 
                         items.append("text")
-                            .attr("id", function(t: Technology) { return "icon" + t.id })
                             .attr("font-family", "FontAwesome")
                             .attr("dx", 0)
                             .attr("dy", '-0.5em')
@@ -415,7 +413,6 @@ module TechRadar {
 
                         // Create the short title for each technology
                         items.append("text")
-                            .attr("id", function(t: Technology) { return "text" + t.id })
                             .attr("dx", 0)
                             .attr("dy", '0.5em')
                             .attr("text-anchor", "middle")
@@ -471,11 +468,8 @@ module TechRadar {
                     });
 
                     scope.setItemVisibility = function(t: Technology, isVisible: boolean) {
-                        var showOrHide = isVisible ? "visible" : "hidden";
-                        d3.select("#shadow" + t.id).attr("visibility", showOrHide);
-                        d3.select("#circle" + t.id).attr("visibility", showOrHide);
-                        d3.select("#icon" + t.id).attr("visibility", showOrHide);
-                        d3.select("#text" + t.id).attr("visibility", showOrHide);
+                        t.visible = isVisible;
+                        d3.select("#technology_item" + t.id).attr("visibility", isVisible ? "visible" : "hidden");
                     }
 
                     if (scope.technologies) scope.render(scope.technologies,scope.options);
