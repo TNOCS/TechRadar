@@ -110,6 +110,7 @@ module App {
                         console.log(c.videoUrl);
                       }
                       technology.content.push(c);
+
                   }
                 });
 
@@ -176,7 +177,8 @@ module App {
             // 'ui.router',
             'ui.bootstrap',
             'techRadar.infoslide',
-            'techRadar.techRadarChart'
+            'techRadar.techRadarChart',
+            'youtube-embed'
             // 'LocalStorageModule',
             // 'pascalprecht.translate',
         ])

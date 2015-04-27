@@ -3,6 +3,7 @@ module TechRadar {
    export class Content{
      public isSelected   : boolean;
      public previewImage : string;
+     public videoUrl : string;
 
      constructor(
        public id          : number,
@@ -25,8 +26,8 @@ module TechRadar {
             public shortTitle    : string,
             public title         : string,
             public subTitle      : string,
-            public text          : string,
-            public color         : string = 'white',
+            public text          : string,          
+            public color         : string,
             public visible       : boolean = true,
             public focus         : boolean = false
         ) {
