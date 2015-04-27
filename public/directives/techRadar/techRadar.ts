@@ -133,12 +133,12 @@ module TechRadar {
                         });
                     });
 
-                    var priorityFill = ((prio)=>{
+                    var priorityFill = ((prio) => {
                       switch (parseInt(prio)){
                         case 1 : return "#F39092"; break;
                         case 2 : return "#9EBACB"; break;
                         case 3 : return "#F5DC8F"; break;
-                        default: return  "#DFE0DC"; break;
+                        default: return "#DFE0DC"; break;
                       }
                     });
 
@@ -380,15 +380,15 @@ module TechRadar {
                           .attr("cx", "2")
                           .attr("cy", "2")
                           .attr("class","item-container-drop-shadow")
-                          .style("fill-opacity",0.5)
-                          .style("fill","black")
+                          .style("fill-opacity", 0.5)
+                          .style("fill", "black")
                           .attr("r", 25);
 
                        // add background circle
                        items.append("circle")
                            .attr("cx", "0")
                            .attr("cy", "0")
-                           .attr("class","item-container")
+                           .attr("class", "item-container")
                            .style("fill", function(t: Technology) { return t.color;})
                            .style("stroke", function(t: Technology) { return priorityStroke(t.priority)})
                            .attr("r", 25);
@@ -482,7 +482,6 @@ module TechRadar {
                         actualHeight = 2 * outerRadius + margin.top  + margin.bottom;
                         scope.render(scope.technologies,scope.options);
                     });
-
                 }
             }
         }])

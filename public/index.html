@@ -56,8 +56,8 @@
               </form>
 
               <!-- Specify priority level -->
-              <div ng-init="prioritylevel = 5" style="margin-top: 6px; color: white; text-align: right; text-align: -webkit-right;" class="pull-right">
-                  <div data-ng-switch="prioritylevel">
+              <div ng-init="tech.priority = 5" style="margin-top: 6px; color: white; text-align: right; text-align: -webkit-right;" class="pull-right">
+                  <div data-ng-switch="tech.priority">
                       <b data-ng-switch-when="1">Priority: high </b>
                       <b data-ng-switch-when="2">Priority: medium-high</b>
                       <b data-ng-switch-when="3">Priority: medium</b>
@@ -65,7 +65,7 @@
                       <b data-ng-switch-when="5">Priority: show all</b>
                   </div>
 
-                  <rating ng-model="prioritylevel" max="5" state-on="'fa fa-dot-circle-o'" state-off="'fa fa-circle-o'"></rating>
+                  <rating ng-model="tech.priority" max="5" state-on="'fa fa-dot-circle-o'" state-off="'fa fa-circle-o'"></rating>
               </div>
 
             </div><!--/.nav-collapse -->
@@ -81,7 +81,7 @@
 
         <div class="technology-list-container">
           <ul class="ts" id="tslist" >
-          <li data-ng-repeat="t in vm.technologies | filter: t.priority <= prioritylevel | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
+          <li data-ng-repeat="t in vm.technologies | priorityFilter:tech.priority | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
             <div class="ts-item" ng-class="{'focus-opacity' :  t.focus}"  style="background:{{t.color}}">
             <div class="list-id">{{t.id}}</div>
             <div class="list-title">{{t.title.trunc(44)}}</div>
@@ -95,18 +95,16 @@
         <div class="container-fluid" style="padding: 0 0 0 0">
 
           <div class="col-md-6" style="width:45%">
-              <tech-radar-chart technologies="vm.technologies" searchterm="searchText" prioritylevel="prioritylevel" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
+              <tech-radar-chart technologies="vm.technologies" searchterm="searchText" prioritylevel="tech.priority" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
           </div>
 
           <div class="col-md-6" style="background:#bdbdbd;margin:0;width:55%;height:100%">
               <infoSlide></infoSlide>
-
           </div>
 
+          <youtube-video video-id="-G0eKRuM9Qg" style="width:300px;height:300px"></youtube-video>
 
         </div><!-- /.container -->
-
-        <youtube-video video-id="-G0eKRuM9Qg" style="width:300px;height:300px"></youtube-video>
 
         <!-- build:js techradar.js -->
         <script src="bower_components/jquery/dist/jquery.min.js"></script>

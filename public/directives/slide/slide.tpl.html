@@ -46,10 +46,12 @@
         </div>
         <div ng-switch-when="youtube">
           <!-- <iframe id="ytplayer" type="text/html" width="640" height="390" src="{{c.videoUrl}}" frameborder="0"/> -->
-          <iframe class="youtube-player" src="{{vm.activeContent.videoUrl}}" frameborder="0" style="width:100%;height:100%"></iframe>
+          <iframe class="youtube-player" ng-src="{{vm.activeContent.videoUrl}}" frameborder="0" style="width:100%;height:100%"></iframe>
         </div>
         <div ng-switch-when="image">
-          <span>test</span>
+            <div class="col-md-12">
+                <img class="img-responsive" data-ng-src="{{vm.activeContent.content}}" alt="{{vm.title}}" />
+            </div>
         </div>
       </div>
     </div>
@@ -57,21 +59,19 @@
     <ul class="content-list" >
       <li data-ng-repeat="c in vm.technology.content">
         <div ng-switch="c.contentType" class="content-preview" ng-class="{\'selected-content\' : c.isSelected}" data-ng-click="vm.selectPage(c.id)">
-        <div ng-switch-when="text">
-          <span>{{c.id}}</span>
+            <div ng-switch-when="text">
+              <span>{{c.id}}</span>
+            </div>
+            <div ng-switch-when="youtube">
+              <img src="http://img.youtube.com/vi/{{c.content}}/0.jpg" class="image-preview" alt="{{vm.title}}" />
+              <!-- <object data="{{c.content}}?autoplay=1" width="100%" height="100%"></object> -->
+            </div>
+            <div ng-switch-when="image">
+              <img src="{{c.content}}" class="image-preview" alt="{{vm.title}}" />
+              <span>{{c.id}}</span>
+            </div>
         </div>
-        <div ng-switch-when="youtube">
-          <img src="http://img.youtube.com/vi/{{c.content}}/0.jpg" class="image-preview" alt="{{vm.title}}" />
-          <!-- <object data="{{c.content}}?autoplay=1" width="100%" height="100%"></object> -->
-        </div>
-        <div ng-switch-when="image">
-
-          <img src="{{c.content}}" class="image-preview" alt="{{vm.title}}" />
-          <span>{{c.id}}</span>
-        </div>
-      </div>
       </li>
-
   </ul>
 
       <!-- <ul class="content-list" >
