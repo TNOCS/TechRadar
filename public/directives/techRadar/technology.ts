@@ -1,5 +1,24 @@
 module TechRadar {
+
+   export class Content{
+
+     public isSelected  : boolean;
+     public previewImage : string;
+
+     constructor(
+       public id          : number,
+       public contentType : string,
+       public content     : string
+
+       ){
+
+     }
+   }
+
     export class Technology {
+
+       public content       : Content[];
+
         constructor(
             public id : number,
             public priority : number,
@@ -15,6 +34,8 @@ module TechRadar {
             public color         : string = 'white',
             public visible       : boolean = true,
             public focus         : boolean = false
-            ) {}
+            ) {
+              this.content = [];
+            }
     }
 }

@@ -11,7 +11,8 @@ module csComp.Services {
         Title:         string,
         Text:          string,
         Subtitle:      string,
-        Media:         string,
+        ContentType:   string,
+        Content: string
     }
 
     /**
@@ -21,7 +22,7 @@ module csComp.Services {
     export class SpreadsheetService {
         /**
          * Load a worksheet.
-         */
+         */ 
          public loadSheet(url: string, callback: (sheet: ISpreadsheetRow[]) => void) {
             console.log('Initializing tabletop');
             Tabletop.init({

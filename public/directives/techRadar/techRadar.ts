@@ -402,6 +402,7 @@ module TechRadar {
                             .attr("class", function(t: Technology) { return t.thumbnail.toLowerCase() || "thumbnail"; })
                             .text(function(t: Technology) { return FontAwesomeUtils.FontAwesomeConverter.convertToCharacter(t.thumbnail); });
 
+
                         // show id
                         // items.append("text")
                         //     .attr("dx", 0)

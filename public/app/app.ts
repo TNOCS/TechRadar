@@ -62,39 +62,52 @@ module App {
             spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
                 this.technologies = [];
                 var id = 1;
+                var page = 0;
+                var technology;
                 spreadsheet.forEach((row) => {
+                    // check if it's part of previous
+                    if (row.Category!=='')
+                    {
                     //console.log(row.Category);
                     //console.log(row.Title);
-                    var deltaTimeString = row.DeltaTime;
-                    var priority = parseInt(row.Priority.toString());
-                    var color;
-                    switch (priority)
-                    {
-                      case 1 : color= "#F39092"; break;
-                      case 2 : color= "#9EBACB"; break;
-                      case 3 : color= "#F5DC8F"; break;
-                      case 4 : color=  "#DFE0DC"; break;
-                    }
-                    var deltaTime     = 0;
-                    if (typeof deltaTimeString === 'string') {
-                        deltaTime = +deltaTimeString.replace(',', '.');
-                    } else {
-                        deltaTime = deltaTimeString;
-                    }
-                    var technology = new Technology(
-                      id++,
-                      priority,
-                      row.Category,
-                      row.Thumbnail,
-                      row.TimeCategory,
-                      deltaTime,
-                      row.ShortTitle,
-                      row.Title,
-                      row.Subtitle,
-                      row.Text,
-                      row.Media,
-                      color);
-                    this.technologies.push(technology);
+                      var deltaTimeString = row.DeltaTime;
+                      var priority = parseInt(row.Priority.toString());
+                      var color;
+                      switch (priority)
+                      {
+                        case 1 : color= "#F39092"; break;
+                        case 2 : color= "#9EBACB"; break;
+                        case 3 : color= "#F5DC8F"; break;
+                        case 4 : color=  "#DFE0DC"; break;
+                      }
+                      var deltaTime     = 0;
+                      if (typeof deltaTimeString === 'string') {
+                          deltaTime = +deltaTimeString.replace(',', '.');
+                      } else {
+                          deltaTime = deltaTimeString;
+                      }
+                      if (priority<5) {
+                        page = 0;
+                        technology = new Technology(
+                        id++,
+                        priority,
+                        row.Category,
+                        row.Thumbnail,
+                        row.TimeCategory,
+                        deltaTime,
+                        row.ShortTitle,
+                        row.Title,
+                        row.Subtitle,
+                        row.Text,
+                        color);
+                        this.technologies.push(technology);
+                      }
+                  }
+                  if (row.ContentType==="") row.ContentType = "text";
+                  if (row.Content!=""){
+                    technology.content.push(new TechRadar.Content(page,row.ContentType,row.Content));
+                    page+=1;
+                  }
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();
@@ -115,6 +128,12 @@ module App {
                         break;
                       case "Right":
                         if (this.activeFocus<this.technologies.length) this.busService.publish("technology","selected",this.technologies[this.activeFocus]);
+                        break;
+                      case "Up":
+                        this.busService.publish("page","previous","");
+                        break;
+                      case "Down":
+                        this.busService.publish("page","next","");
                         break;
                     }
 
