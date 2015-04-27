@@ -10,7 +10,7 @@ module Slide {
      * Controls how a slide is displayed.
      */
     export class SlideCtrl {
-        private scope     : ISlideScope;
+        private scope    : ISlideScope;
         public technology: Technology;
 
         public activeContent : TechRadar.Content;

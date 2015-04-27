@@ -1,28 +1,24 @@
 module TechRadar {
 
    export class Content{
-
-     public isSelected  : boolean;
+     public isSelected   : boolean;
      public previewImage : string;
-     public videoUrl : string;
+     public videoUrl     : string;
 
      constructor(
        public id          : number,
        public contentType : string,
        public content     : string
-
        ){
-
      }
    }
 
     export class Technology {
-
        public content       : Content[];
 
-        constructor(
-            public id : number,
-            public priority : number,
+       constructor(
+            public id            : number,
+            public priority      : number,
             public category      : string,
             public thumbnail     : string,
             public timePeriod    : string,
@@ -30,12 +26,12 @@ module TechRadar {
             public shortTitle    : string,
             public title         : string,
             public subTitle      : string,
-            public text          : string,          
+            public text          : string,
             public color         : string,
             public visible       : boolean = true,
             public focus         : boolean = false
-            ) {
-              this.content = [];
-            }
+        ) {
+            this.content = [];
+        }
     }
 }

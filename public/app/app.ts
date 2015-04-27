@@ -75,11 +75,11 @@ module App {
                       var color;
                       switch (priority)
                       {
-                        case 1 : color= "#F39092"; break;
-                        case 2 : color= "#9EBACB"; break;
-                        case 3 : color= "#F5DC8F"; break;
-                        case 4 : color=  "#DFE0DC"; break;
-                        default: color = "white";
+                        case 1 : color = "#F39092"; break;
+                        case 2 : color = "#F5DC8F"; break;
+                        case 3 : color = "#9EBACB"; break;
+                        case 4 : color = "#DFE0DC"; break;
+                        default: color = "white"  ; break;
                       }
                       var deltaTime     = 0;
                       if (typeof deltaTimeString === 'string') {
@@ -87,9 +87,8 @@ module App {
                       } else {
                           deltaTime = deltaTimeString;
                       }
-                      if (priority<5) {
-                        page = 0;
-                        technology = new Technology(
+                      page       = 0;
+                      technology = new Technology(
                         id++,
                         priority,
                         row.Category,
@@ -101,47 +100,70 @@ module App {
                         row.Subtitle,
                         row.Text,
                         color);
-                        this.technologies.push(technology);
-                      }
+                      this.technologies.push(technology);
                   }
-                  if (row.ContentType==="") row.ContentType = "text";
-
-
-                    var c = new TechRadar.Content(page,row.ContentType,row.Content);
-                    if (c.contentType == "youtube") {
-                      c.videoUrl = "http://www.youtube.com/embed/" + c.content + "?rel=0&autoplay=1";
-                      console.log(c.videoUrl);
-                    }
-                    technology.content.push(c);
-                    page+=1;
+                  if (row.ContentType === "") row.ContentType = "text";
+                  if (row.Content !== ""){
+                      var c = new TechRadar.Content(page++, row.ContentType, row.Content);
+                      if (c.contentType.toLowerCase() === "youtube") {
+                        c.videoUrl = c.content.indexOf("http") > 0
+                            ? c.content
+                            : "http://www.youtube.com/embed/" + c.content + "?rel=0&autoplay=1";
+                        console.log(c.videoUrl);
+                      }
+                      technology.content.push(c);
 
                 });
+
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();
                   this.slider = <any>$(".ts");
                   this.slider.itemslide( { disable_autowidth : true } );
                   this.busService.publish("technology", "selected", this.technologies[0]);
                   $( "body" ).keydown(( event )=> {
+                    var selected: Technology;
                     switch ((<any>event.originalEvent).keyIdentifier)
                     {
                       case "Home":
-                        this.busService.publish("technology","selected",this.technologies[0]);
-                        break;
+                          this.activeFocus = 0;
+                          while (this.activeFocus < this.technologies.length) {
+                              selected = this.technologies[this.activeFocus];
+                              if (selected.visible) break;
+                              this.activeFocus++;
+                          }
+                          this.busService.publish("technology","selected", selected);
+                          break;
                       case "End":
-                        this.busService.publish("technology","selected",this.technologies[this.technologies.length-1]);
-                        break;
+                          this.activeFocus = this.technologies.length-1;
+                          while (this.activeFocus > 1) {
+                              selected = this.technologies[this.activeFocus];
+                              if (selected.visible) break;
+                              this.activeFocus--;
+                          }
+                          this.busService.publish("technology","selected", selected);
+                          break;
                       case "Left":
-                        if (this.activeFocus > 1) this.busService.publish("technology","selected",this.technologies[this.activeFocus-2]);
-                        break;
+                          while (this.activeFocus > 1) {
+                              selected = this.technologies[this.activeFocus - 2];
+                              if (selected.visible) break;
+                              this.activeFocus--;
+                          }
+                          this.busService.publish("technology","selected", selected);
+                          break;
                       case "Right":
-                        if (this.activeFocus<this.technologies.length) this.busService.publish("technology","selected",this.technologies[this.activeFocus]);
-                        break;
+                          while (this.activeFocus < this.technologies.length) {
+                              selected = this.technologies[this.activeFocus];
+                              if (selected.visible) break;
+                              this.activeFocus++;
+                          }
+                          this.busService.publish("technology","selected", selected);
+                          break;
                       case "Up":
-                        this.busService.publish("page","previous","");
-                        break;
+                          this.busService.publish("page","previous","");
+                          break;
                       case "Down":
-                        this.busService.publish("page","next","");
-                        break;
+                          this.busService.publish("page","next","");
+                          break;
                     }
 
                     if ( event.which == 13 ) {
@@ -184,6 +206,15 @@ module App {
             // 'LocalStorageModule',
             // 'pascalprecht.translate',
         ])
+        .filter('priorityFilter', function() {
+            return function(technologies: Technology[], priorityLevel: number) {
+                var filteredItems = []
+                technologies.forEach((t) => {
+                    if (t.priority <= priorityLevel) filteredItems.push(t);
+                });
+                return filteredItems;
+            }
+        })
         // .config(localStorageServiceProvider => {
         //     localStorageServiceProvider.prefix = 'csMap';
         // })
