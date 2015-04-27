@@ -112,7 +112,7 @@ module App {
                         console.log(c.videoUrl);
                       }
                       technology.content.push(c);
-                  }
+                  
                 });
 
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
