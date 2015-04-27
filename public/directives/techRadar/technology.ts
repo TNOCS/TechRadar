@@ -2,9 +2,15 @@ module TechRadar {
 
    export class Content{
 
+     public isSelected  : boolean;
+     public previewImage : string;
+
      constructor(
-       contentType : string,
-       data        : string){
+       public id          : number,
+       public contentType : string,
+       public content     : string
+
+       ){
 
      }
    }
@@ -25,7 +31,7 @@ module TechRadar {
             public subTitle      : string,
             public text          : string,
             public media         : string,
-            public color         : string = 'white',            
+            public color         : string = 'white',
             public visible       : boolean = true,
             public focus         : boolean = false
             ) {

@@ -62,6 +62,7 @@ module App {
             spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
                 this.technologies = [];
                 var id = 1;
+                var page = 0;
                 var technology;
                 spreadsheet.forEach((row) => {
                     // check if it's part of previous
@@ -86,6 +87,7 @@ module App {
                           deltaTime = deltaTimeString;
                       }
                       if (priority<5) {
+                        page = 0;
                         technology = new Technology(
                         id++,
                         priority,
@@ -103,7 +105,8 @@ module App {
                   }
                   if (row.ContentType==="") row.ContentType = "text";
                   if (row.Content!=""){
-                    technology.content.push(new TechRadar.Content(row.ContentType,row.Content));
+                    technology.content.push(new TechRadar.Content(page,row.ContentType,row.Content));
+                    page+=1;
                   }
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
@@ -125,6 +128,12 @@ module App {
                         break;
                       case "Right":
                         if (this.activeFocus<this.technologies.length) this.busService.publish("technology","selected",this.technologies[this.activeFocus]);
+                        break;
+                      case "Up":
+                        this.busService.publish("page","previous","");
+                        break;
+                      case "Down":
+                        this.busService.publish("page","next","");
                         break;
                     }
 

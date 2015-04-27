@@ -11,13 +11,34 @@ var Slide;
                     return;
                 _this.showSlide(technology);
             });
+            busService.subscribe('page', function (action) {
+                if (action === 'previous' && _this.page > 0)
+                    _this.selectPage(_this.page - 1);
+                if (action === 'next' && _this.technology.content.length - 1 > _this.page)
+                    _this.selectPage(_this.page + 1);
+                5;
+            });
         }
+        SlideCtrl.prototype.selectPage = function (id) {
+            if (!this.technology.content)
+                return;
+            this.page = id;
+            this.technology.content.forEach(function (c) {
+                c.isSelected = c.id === id;
+            });
+            if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
+                this.$scope.$apply();
+            }
+        };
         SlideCtrl.prototype.showSlide = function (technology) {
             if (!technology) {
                 console.log("ERROR: Technology is empty");
                 return;
             }
             this.technology = technology;
+            if (this.technology.content.length > 0) {
+                this.selectPage(0);
+            }
             if (!technology.title) {
                 console.log('Missing title:');
                 console.log(JSON.stringify(technology));
