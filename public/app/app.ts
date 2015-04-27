@@ -75,10 +75,11 @@ module App {
                       var color;
                       switch (priority)
                       {
-                        case 1 : color= "#F39092"; break;
-                        case 2 : color= "#9EBACB"; break;
-                        case 3 : color= "#F5DC8F"; break;
-                        case 4 : color=  "#DFE0DC"; break;
+                        case 1 : color = "#F39092"; break;
+                        case 2 : color = "#9EBACB"; break;
+                        case 3 : color = "#F5DC8F"; break;
+                        case 4 : color = "#DFE0DC"; break;
+                        default: color = "white"  ; break;
                       }
                       var deltaTime     = 0;
                       if (typeof deltaTimeString === 'string') {
@@ -86,9 +87,8 @@ module App {
                       } else {
                           deltaTime = deltaTimeString;
                       }
-                      if (priority<5) {
-                        page = 0;
-                        technology = new Technology(
+                      page       = 0;
+                      technology = new Technology(
                         id++,
                         priority,
                         row.Category,
@@ -100,15 +100,19 @@ module App {
                         row.Subtitle,
                         row.Text,
                         color);
-                        this.technologies.push(technology);
-                      }
+                      this.technologies.push(technology);
                   }
-                  if (row.ContentType==="") row.ContentType = "text";
-                  if (row.Content!=""){
-                    technology.content.push(new TechRadar.Content(page,row.ContentType,row.Content));
-                    page+=1;
+                  if (row.ContentType === "") row.ContentType = "text";
+                  if (row.Content != ""){
+                      var c = new TechRadar.Content(page++, row.ContentType, row.Content);
+                      if (c.contentType.toLowerCase() === "youtube") {
+                        c.videoUrl = "http://www.youtube.com/embed/" + c.content + "?rel=0&autoplay=1";
+                        console.log(c.videoUrl);
+                      }
+                      technology.content.push(c);
                   }
                 });
+
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();
                   this.slider = <any>$(".ts");

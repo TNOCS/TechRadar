@@ -20,11 +20,14 @@ var Slide;
             });
         }
         SlideCtrl.prototype.selectPage = function (id) {
+            var _this = this;
             if (!this.technology.content)
                 return;
             this.page = id;
             this.technology.content.forEach(function (c) {
                 c.isSelected = c.id === id;
+                if (c.isSelected)
+                    _this.activeContent = c;
             });
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                 this.$scope.$apply();
@@ -47,7 +50,6 @@ var Slide;
             this.title = technology.title;
             this.subTitle = technology.subTitle;
             this.text = technology.text;
-            this.media = technology.media;
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                 this.$scope.$apply();
             }
