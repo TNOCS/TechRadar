@@ -57,66 +57,59 @@ module App {
                   this.setFocus(t);
                   break;
               }
-
             });
 
             spreadsheetService.loadSheet(this.public_spreadsheet_url, (spreadsheet: ISpreadsheetRow[]) => {
-                //this.showInfo(spreadsheet);
-                //busService.publish('spreadsheet', 'newSheet', spreadsheet);
-
                 this.technologies = [];
                 var id = 1;
+                var technology;
                 spreadsheet.forEach((row) => {
                     // check if it's part of previous
                     if (row.Category!=='')
                     {
                     //console.log(row.Category);
                     //console.log(row.Title);
-                    var deltaTimeString = row.DeltaTime;
-                    var priority = parseInt(row.Priority.toString());
-                    var color;
-                    switch (priority)
-                    {
-                      case 1 : color= "#F39092"; break;
-                      case 2 : color= "#9EBACB"; break;
-                      case 3 : color= "#F5DC8F"; break;
-                      case 4 : color=  "#DFE0DC"; break;
-
-                    }
-                    var deltaTime     = 0,
-                        deltaCategory = 0;
-                    if (typeof deltaTimeString === 'string') {
-                        deltaTime = +deltaTimeString.replace(',', '.');
-                    } else {
-                        deltaTime = deltaTimeString;
-                    }
-                    //var technology = new Technology(id, priority, row.Category, row.Thumbnail, row.TimeCategory, deltaTime, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Media, color);
-                    if (priority<5)
-                    {
-                      var technology = new Technology(id,priority,row.Category, row.Thumbnail, row.TimeCategory, deltaTime, deltaCategory, row.ShortTitle, row.Title, row.Subtitle, row.Text, row.Content, color);
-                      this.technologies.push(technology);
-                      if (row.ContentType==="") row.ContentType = "text";
-                      if (row.Content!=""){
-                        technology.content.push(new TechRadar.Content(row.ContentType,row.Content));
+                      var deltaTimeString = row.DeltaTime;
+                      var priority = parseInt(row.Priority.toString());
+                      var color;
+                      switch (priority)
+                      {
+                        case 1 : color= "#F39092"; break;
+                        case 2 : color= "#9EBACB"; break;
+                        case 3 : color= "#F5DC8F"; break;
+                        case 4 : color=  "#DFE0DC"; break;
                       }
-                      id+=1;
-                    }
-                  }else
-                  {
-
+                      var deltaTime     = 0;
+                      if (typeof deltaTimeString === 'string') {
+                          deltaTime = +deltaTimeString.replace(',', '.');
+                      } else {
+                          deltaTime = deltaTimeString;
+                      }
+                      if (priority<5) {
+                        technology = new Technology(
+                        id++,
+                        priority,
+                        row.Category,
+                        row.Thumbnail,
+                        row.TimeCategory,
+                        deltaTime,
+                        row.ShortTitle,
+                        row.Title,
+                        row.Subtitle,
+                        row.Text,
+                        color);
+                        this.technologies.push(technology);
+                      }
                   }
-
-
-
-
-                    //var technology = row.
+                  if (row.ContentType==="") row.ContentType = "text";
+                  if (row.Content!=""){
+                    technology.content.push(new TechRadar.Content(row.ContentType,row.Content));
+                  }
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();
                   this.slider = <any>$(".ts");
-                  this.slider.itemslide(
-                    {disable_autowidth : true }
-                  );
+                  this.slider.itemslide( { disable_autowidth : true } );
                   this.busService.publish("technology", "selected", this.technologies[0]);
                   $( "body" ).keydown(( event )=> {
                     switch ((<any>event.originalEvent).keyIdentifier)
@@ -128,7 +121,7 @@ module App {
                         this.busService.publish("technology","selected",this.technologies[this.technologies.length-1]);
                         break;
                       case "Left":
-                        if (this.activeFocus>1) this.busService.publish("technology","selected",this.technologies[this.activeFocus-2]);
+                        if (this.activeFocus > 1) this.busService.publish("technology","selected",this.technologies[this.activeFocus-2]);
                         break;
                       case "Right":
                         if (this.activeFocus<this.technologies.length) this.busService.publish("technology","selected",this.technologies[this.activeFocus]);

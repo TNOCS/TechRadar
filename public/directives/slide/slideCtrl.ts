@@ -11,7 +11,7 @@ module Slide {
      */
     export class SlideCtrl {
         private scope     : ISlideScope;
-        private technology: Technology;
+        public technology: Technology;
 
         public title   : string;
         public subTitle: string;
@@ -42,6 +42,7 @@ module Slide {
         }
 
         private showSlide(technology: Technology) {
+
             if (!technology) {
                 console.log("ERROR: Technology is empty");
                 return;

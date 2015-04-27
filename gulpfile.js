@@ -46,7 +46,7 @@ gulp.task('run node', function (cb) {
 })
 
 gulp.task('convertTemplates2Ts', function() {
-    gulp.src('./src/**/*.tpl.html')
+    gulp.src('./**/*.tpl.html')
         .pipe(plumber())
         .pipe(cache('templates'))
         .pipe(insert.prepend(function(file) {
