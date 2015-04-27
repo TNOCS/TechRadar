@@ -68,11 +68,14 @@ module App {
                     // check if it's part of previous
                     if (row.Category!=='')
                     {
+
                     //console.log(row.Category);
                     //console.log(row.Title);
                       var deltaTimeString = row.DeltaTime;
                       var priority = parseInt(row.Priority.toString());
                       var color;
+                      if (priority<5)
+                      {
                       switch (priority)
                       {
                         case 1 : color = "#F39092"; break;
@@ -101,7 +104,9 @@ module App {
                         row.Text,
                         color);
                       this.technologies.push(technology);
+                    }
                   }
+
                   if (row.ContentType === "") row.ContentType = "text";
                   if (row.Content !== ""){
                       var c = new TechRadar.Content(page++, row.ContentType, row.Content);

@@ -90,6 +90,8 @@
       bottom:0;
       left:0;
       right:0;
+      width:100%;
+      height:auto;
       position:absolute;
     }
 
@@ -116,10 +118,7 @@
           <!-- <span>{{vm.activeContent.videoUrl}}</span> -->
         </div>
         <div ng-switch-when="image">
-            <div class="col-md-12">
-                <img src="{{vm.activeContent.content}}" class="active-image img-responsive" alt="{{vm.title}}" />
-                <!-- <img class="img-responsive" data-ng-src="{{vm.activeContent.content}}" alt="{{vm.title}}" /> -->
-            </div>
+          <img src="{{vm.activeContent.content}}" class="active-image" style="width:100%" alt="{{vm.title}}" />
         </div>
       </div>
     </div>
@@ -127,7 +126,7 @@
     <ul class="content-list" >
       <li data-ng-repeat="c in vm.technology.content">
         <div ng-switch="c.contentType" class="content-preview" ng-class="{\'selected-content\' : c.isSelected}" data-ng-click="vm.selectPage(c.id)">
-            <div ng-switch-when="text">
+        <div ng-switch-when="text">
           <span class="preview-icon fa fa-font fa-3" ></span>
         </div>
         <div ng-switch-when="youtube">
@@ -141,6 +140,7 @@
         </div>
       </div>
       </li>
+
   </ul>
 
   <div class="slide-title">
