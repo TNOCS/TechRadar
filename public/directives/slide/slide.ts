@@ -19,7 +19,7 @@ module Slide {
       * Directive to display a slide of information.
       */
     myModule.directive('infoslide', [
-        '$window', '$compile',
+        '$window', '$compile', 
         function ($window, $compile)  : ng.IDirective {
             return {
                 terminal  : false,  // do not compile any other internal directives

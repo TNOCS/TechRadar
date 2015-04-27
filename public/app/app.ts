@@ -110,10 +110,11 @@ module App {
                             ? c.content
                             : "http://www.youtube.com/embed/" + c.content + "?rel=0&autoplay=1";
                         console.log(c.videoUrl);
-                      }
+                      };
                       technology.content.push(c);
 
-                });
+                }
+              });
 
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();
