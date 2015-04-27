@@ -4,14 +4,14 @@ module Slide {
 
     export interface ISlideScope extends ng.IScope {
         vm: SlideCtrl;
-    }
+    } 
 
     /**
      * Controls how a slide is displayed.
      */
     export class SlideCtrl {
         private scope     : ISlideScope;
-        public technology: Technology; 
+        public technology: Technology;
 
         public activeContent : TechRadar.Content;
 

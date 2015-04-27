@@ -117,7 +117,10 @@ module App {
                         console.log(c.videoUrl);
                       };
                       technology.content.push(c);
-
+                }
+                else if (priority<5)
+                {
+                  technology.content.push(new TechRadar.Content(page++,"text",""));
                 }
               });
 
