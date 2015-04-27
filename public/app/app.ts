@@ -114,7 +114,7 @@ module App {
                     }
                     technology.content.push(c);
                     page+=1;
-                  
+
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();
@@ -222,6 +222,12 @@ module App {
         // })
         .service('sheetService', csComp.Services.SpreadsheetService)
         .service('busService', csComp.Services.MessageBusService)
-        .controller('appCtrl', AppCtrl);
+        .controller('appCtrl', AppCtrl)
+        .config(function($sceDelegateProvider) {$sceDelegateProvider.resourceUrlWhitelist([
+   // Allow same origin resource loads.
+   'self',
+   // Allow loading from our assets domain.  Notice the difference between * and **.
+   'http://www.youtube.com/**'
+ ])});
 
 }
