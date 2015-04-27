@@ -21,6 +21,8 @@ var Slide;
         }
         SlideCtrl.prototype.selectPage = function (id) {
             var _this = this;
+            this.activeContent = null;
+            5;
             if (!this.technology.content)
                 return;
             this.page = id;

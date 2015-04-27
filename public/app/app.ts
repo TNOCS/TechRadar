@@ -105,7 +105,7 @@ module App {
                       }
                   }
                   if (row.ContentType==="") row.ContentType = "text";
-                  if (row.Content!=""){
+
 
                     var c = new TechRadar.Content(page,row.ContentType,row.Content);
                     if (c.contentType == "youtube") {
@@ -114,7 +114,7 @@ module App {
                     }
                     technology.content.push(c);
                     page+=1;
-                  }
+                  
                 });
                 if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') {
                   this.$scope.$apply();

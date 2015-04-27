@@ -52,6 +52,7 @@ module Slide {
 
         public selectPage(id : number)
         {
+          this.activeContent = null;5
           if (!this.technology.content) return;
           this.page = id;
 
