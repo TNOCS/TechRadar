@@ -13,6 +13,8 @@ module Slide {
         private scope     : ISlideScope;
         public technology: Technology;
 
+        public activeContent : TechRadar.Content;
+
         public title   : string;
         public subTitle: string;
         public text    : string;
@@ -56,6 +58,7 @@ module Slide {
           this.technology.content.forEach((c)=>
           {
             c.isSelected = c.id === id;
+            if (c.isSelected) this.activeContent = c;
           });
           if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
         }
@@ -79,7 +82,7 @@ module Slide {
             this.title      = technology.title;
             this.subTitle   = technology.subTitle;
             this.text       = technology.text;
-            this.media      = technology.media;
+            //this.media      = technology.media;
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
         }
     }

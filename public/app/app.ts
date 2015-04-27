@@ -79,6 +79,7 @@ module App {
                         case 2 : color= "#9EBACB"; break;
                         case 3 : color= "#F5DC8F"; break;
                         case 4 : color=  "#DFE0DC"; break;
+                        default: color = "white";
                       }
                       var deltaTime     = 0;
                       if (typeof deltaTimeString === 'string') {
@@ -105,7 +106,13 @@ module App {
                   }
                   if (row.ContentType==="") row.ContentType = "text";
                   if (row.Content!=""){
-                    technology.content.push(new TechRadar.Content(page,row.ContentType,row.Content));
+
+                    var c = new TechRadar.Content(page,row.ContentType,row.Content);
+                    if (c.contentType == "youtube") {
+                      c.videoUrl = "http://www.youtube.com/embed/" + c.content + "?rel=0&autoplay=1";
+                      console.log(c.videoUrl);
+                    }
+                    technology.content.push(c);
                     page+=1;
                   }
                 });
@@ -172,7 +179,8 @@ module App {
             // 'ui.router',
             'ui.bootstrap',
             'techRadar.infoslide',
-            'techRadar.techRadarChart'
+            'techRadar.techRadarChart',
+            'youtube-embed'
             // 'LocalStorageModule',
             // 'pascalprecht.translate',
         ])
