@@ -356,7 +356,7 @@ module TechRadar {
                                 var catPeriodInfo = catPeriodsInfo[t.category + '-' + t.timePeriod];
                                 var angle  = categoryInfo.startAngle + 0.1 + (catPeriodInfo.index++ / catPeriodInfo.count) * (categoryInfo.endAngle - categoryInfo.startAngle);
                                 if (!t.relativeRadius)
-                                    t.relativeRadius = catPeriodInfo.lastUsedRadius < 0.5 ? 0.25 : 0.75;
+                                    t.relativeRadius = catPeriodInfo.lastUsedRadius < 0.5 ? 0.75 : 0.25;
                                 var radius = periodInfo.innerRadius + Math.max(0.1, Math.min(0.9, t.relativeRadius)) * (periodInfo.outerRadius - periodInfo.innerRadius);
                                 catPeriodInfo.lastUsedRadius = t.relativeRadius;
                                 var x =  Math.sin(angle) * radius;
