@@ -4,7 +4,7 @@ module Slide {
 
     export interface ISlideScope extends ng.IScope {
         vm: SlideCtrl;
-    } 
+    }
 
     /**
      * Controls how a slide is displayed.
