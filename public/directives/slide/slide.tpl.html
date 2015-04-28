@@ -91,7 +91,7 @@
       left:0;
       right:0;
       width:100%;
-      height:auto; 
+      height:auto;
       position:absolute;
     }
 
@@ -105,7 +105,7 @@
       top: 30px;
     }
 
-    </style>
+    </style> 
 
     <div class="active-content">
       <div data-ng-switch="vm.activeContent.contentType">
@@ -119,6 +119,9 @@
         </div>
         <div ng-switch-when="image">
           <img src="{{vm.activeContent.content}}" class="active-image" style="width:100%"  />
+        </div>
+        <div ng-switch-when="markdown">
+          <wiz-markdown class="active-text" content="vm.activeContent.content"></wiz-markdown>
         </div>
       </div>
     </div>
@@ -138,6 +141,9 @@
           <img src="{{c.content}}" ng-class="{\'selected-image\' : c.isSelected}" class="image-preview" alt="{{vm.title}}" />
           <span class="preview-icon fa fa-image fa-3" ></span>
         </div>
+        <div ng-switch-when="markdown">
+          <span class="preview-icon fa fa-font fa-3" ></span>
+        </div>
       </div>
       </li>
 
@@ -147,8 +153,8 @@
     {{vm.technology.title}}
   </div>
 
-  <div ng-show="vm.technology.subTitle" class="slide-subtitle">
-    {{vm.technology.subTitle}}
+  <div ng-show="vm.activeContent.subTitle" class="slide-subtitle">
+    {{vm.activeContent.subTitle}}
   </div>
 
       <!-- <ul class="content-list" >

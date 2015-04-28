@@ -43,8 +43,8 @@ module TechRadar {
               //   length <= 6, do not change, substr(0,n-1)
 
     export interface ITechRadarChartScope extends ng.IScope {
-        technologies  : Technology[];
-        options       : RenderOptions;
+        technologies: Technology[];
+        options : RenderOptions;
         searchterm    : string;
         prioritylevel : number;
         /**
@@ -79,16 +79,16 @@ module TechRadar {
                 restrict: 'EA',       // E = elements, other options are A=attributes and C=classes
                 transclude: true,
                 scope: {
-                    technologies : '=',  // = means that we use angular to evaluate the expression,
-                    options      : '=',
+                    technologies: '=',  // = means that we use angular to evaluate the expression,
+                    options     : '=',
                     searchterm   : '=',
                     prioritylevel: '=',
-                    startangle   : '@',  // In degrees, 0 is north
-                    endangle     : '@',
-                    radius       : '@',  // the value is used as is
-                    innerradius  : '@',
-                    margin       : '@'
-                },
+                    startangle  : '@',  // In degrees, 0 is north
+                    endangle    : '@',
+                    radius      : '@',  // the value is used as is
+                    innerradius : '@',
+                    margin      : '@'
+                }, 
                 link: function (scope: ITechRadarChartScope, element, attrs) {
                     const rad2deg = 180 / Math.PI;
                     var parent    = $(element[0]).parent();
@@ -133,12 +133,12 @@ module TechRadar {
                         });
                     });
 
-                    var priorityFill = ((prio) => {
+                    var priorityFill = ((prio)=>{
                       switch (parseInt(prio)){
                         case 1 : return "#F39092"; break;
                         case 2 : return "#9EBACB"; break;
                         case 3 : return "#F5DC8F"; break;
-                        default: return "#DFE0DC"; break;
+                        default: return  "#DFE0DC"; break;
                       }
                     });
 
@@ -223,7 +223,7 @@ module TechRadar {
                             }
                             var cp = t.category+'-'+t.timePeriod;
                             if (!catPeriodsInfo.hasOwnProperty(cp))
-                                catPeriodsInfo[cp] = { index: 0, count: 1, lastUsedRadius: 0 };
+                            catPeriodsInfo[cp] = { index: 0, count: 1, lastUsedRadius: 0 };
                             else
                                 catPeriodsInfo[cp].count++;
                         });
@@ -343,7 +343,7 @@ module TechRadar {
                         var items = elem
                             .enter()
                             .append("g")
-                            .style('display', ((t:Technology) => { return t.visible ? "block" : "none"}))
+                            .style('display',((t:Technology)=>{ return t.visible ? "block" : "none"}))
                             .attr("id", function(t: Technology) { return "technology_item" + t.id })
                             .attr('class', 'shortTitle');
 
@@ -380,15 +380,15 @@ module TechRadar {
                           .attr("cx", "2")
                           .attr("cy", "2")
                           .attr("class","item-container-drop-shadow")
-                          .style("fill-opacity", 0.5)
-                          .style("fill", "black")
+                          .style("fill-opacity",0.5)
+                          .style("fill","black")
                           .attr("r", 25);
 
                        // add background circle
                        items.append("circle")
                            .attr("cx", "0")
                            .attr("cy", "0")
-                           .attr("class", "item-container")
+                           .attr("class","item-container")
                            .style("fill", function(t: Technology) { return t.color;})
                            .style("stroke", function(t: Technology) { return priorityStroke(t.priority)})
                            .attr("r", 25);

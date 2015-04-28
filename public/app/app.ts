@@ -13,7 +13,6 @@ module App {
         private technologies: Technology[];
 
         public options : TechRadar.RenderOptions;
-
         public filter : Function;
         private slider : any;
         private activeFocus : number;
@@ -103,21 +102,23 @@ module App {
                         color);
                       this.technologies.push(technology);
                   }
+                  if (row.Subtitle==="" && technology) row.Subtitle = technology.subTitle;
 
                   if (row.ContentType === "") row.ContentType = "text";
                   if (row.Content !== ""){
-                      var c = new TechRadar.Content(page++, row.ContentType, row.Content);
+
+                      var c = new TechRadar.Content(page++, row.ContentType, row.Content,row.Subtitle);
                       if (c.contentType.toLowerCase() === "youtube") {
                         c.videoUrl = c.content.indexOf("http") > 0
                             ? c.content
                             : "http://www.youtube.com/embed/" + c.content + "?rel=0&autoplay=1";
                         console.log(c.videoUrl);
                       };
-                      technology.content.push(c);
+                      if (technology!=null) technology.content.push(c);
                 }
                 else if (priority<5)
                 {
-                  technology.content.push(new TechRadar.Content(page++,"text",""));
+                  technology.content.push(new TechRadar.Content(page++,"text","",row.Subtitle));
                 }
               });
 
@@ -208,10 +209,12 @@ module App {
             'ui.bootstrap',
             'techRadar.infoslide',
             'techRadar.techRadarChart',
-            'youtube-embed'
+            'youtube-embed',
+            'wiz.markdown'
             // 'LocalStorageModule',
             // 'pascalprecht.translate',
         ])
+
         .filter('priorityFilter', function() {
             return function(technologies: Technology[], priorityLevel: number) {
                 var filteredItems = [];
