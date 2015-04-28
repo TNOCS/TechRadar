@@ -88,7 +88,7 @@ module TechRadar {
                     radius      : '@',  // the value is used as is
                     innerradius : '@',
                     margin      : '@'
-                },
+                }, 
                 link: function (scope: ITechRadarChartScope, element, attrs) {
                     const rad2deg = 180 / Math.PI;
                     var parent    = $(element[0]).parent();

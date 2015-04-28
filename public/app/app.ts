@@ -12,7 +12,7 @@ module App {
         private public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true';
         private technologies: Technology[];
 
-        public options : TechRadar.RenderOptions;        
+        public options : TechRadar.RenderOptions;
         public filter : Function;
         private slider : any;
         private activeFocus : number;
