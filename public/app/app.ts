@@ -74,8 +74,6 @@ module App {
                       var deltaTimeString = row.DeltaTime;
                       var priority = parseInt(row.Priority.toString());
                       var color;
-                      if (priority<5)
-                      {
                       switch (priority)
                       {
                         case 1 : color = "#F39092"; break;
@@ -104,7 +102,6 @@ module App {
                         row.Text,
                         color);
                       this.technologies.push(technology);
-                    }
                   }
 
                   if (row.ContentType === "") row.ContentType = "text";
@@ -217,7 +214,8 @@ module App {
         ])
         .filter('priorityFilter', function() {
             return function(technologies: Technology[], priorityLevel: number) {
-                var filteredItems = []
+                var filteredItems = [];
+                if (typeof technologies === 'undefined') return filteredItems;
                 technologies.forEach((t) => {
                     if (t.priority <= priorityLevel) filteredItems.push(t);
                 });
