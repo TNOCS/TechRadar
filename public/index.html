@@ -43,17 +43,16 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
               </ul>
-
-              <!-- Filter technologies that are shown -->
               <form class="navbar-form navbar-right" style="margin-right:0" role="search" class="pull-right">
                   <div id="scrollable-dropdown-menu" class="form-group has-feedback navbar-right">
                       <input data-ng-model="searchText"
                              id="searchbox"
                              type="text"
                              class="typeahead form-control">
-                      <span id="searchicon" class="fa fa-filter form-control-feedback" style="margin-top: 0.65em"></span>
+                      <span id="searchicon" class="fa fa-search form-control-feedback" style="margin-top: 0.65em"></span>
                   </div>
               </form>
+
 
               <!-- Specify priority level -->
               <div ng-init="tech.priority = 5" style="margin-top: 6px; color: white; text-align: right; text-align: -webkit-right;" class="pull-right">
@@ -81,7 +80,7 @@
 
         <div class="technology-list-container">
           <ul class="ts" id="tslist" >
-          <li data-ng-repeat="t in vm.technologies | priorityFilter:tech.priority | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
+          <li data-ng-repeat="t in vm.technologies | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
             <div class="ts-item" ng-class="{'focus-opacity' :  t.focus}"  style="background:{{t.color}}">
             <div class="list-id">{{t.id}}</div>
             <div class="list-title">{{t.title.trunc(44)}}</div>
@@ -95,22 +94,25 @@
         <div class="container-fluid" style="padding: 0 0 0 0">
 
           <div class="col-md-6" style="width:45%">
-              <tech-radar-chart technologies="vm.technologies" searchterm="searchText" prioritylevel="tech.priority" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
+              <tech-radar-chart  technologies="vm.technologies" searchterm="searchText" prioritylevel="4" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
           </div>
 
           <div class="col-md-6" style="background:#bdbdbd;margin:0;width:55%;height:100%;padding:0">
               <infoSlide></infoSlide>
           </div>
 
-          <youtube-video video-id="-G0eKRuM9Qg" style="width:300px;height:300px"></youtube-video>
 
         </div><!-- /.container -->
+
+        <youtube-video video-id="-G0eKRuM9Qg" style="width:300px;height:300px"></youtube-video>
 
         <!-- build:js techradar.js -->
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
         <script src="bower_components/d3/d3.min.js"></script>
         <script src="bower_components/pnotify/pnotify.core.js"></script>
@@ -122,7 +124,9 @@
         <!--<script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="bower_components/angular-translate/angular-translate.min.js"></script>
-        <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>-->
+        -->
+        <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+        <script src="bower_components/wiz-markdown/wizMarkdown/wizMarkdown.min.js"></script>
 
         <script src="./services/sheet/SheetService.js"></script>
         <script src="./services/bus/MessageBus.js"></script>
