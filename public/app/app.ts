@@ -204,7 +204,8 @@ module App {
             'ui.bootstrap',
             'techRadar.infoslide',
             'techRadar.techRadarChart',
-            'youtube-embed',
+            'techRadar.youtube',
+            // 'youtube-embed',
             'wiz.markdown'
             // 'LocalStorageModule',
             // 'pascalprecht.translate',

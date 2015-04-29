@@ -26,7 +26,7 @@
         <![endif]-->
     </head>
     <body data-ng-controller="appCtrl" data-ng-cloak>
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- <script src="https://www.youtube.com/iframe_api"></script> -->
     <!-- build:js techradar.js -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -35,16 +35,12 @@
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/d3/d3.min.js"></script>
     <script src="bower_components/pnotify/pnotify.core.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="bower_components/wiz-markdown/wizMarkdown/wizMarkdown.min.js"></script>
+
     <script src="./includes/js/tabletop.js"></script>
     <script src="./includes/js/itemslide.min.js"></script>
     <script src="./includes/js/jquery.mousewheel.min.js"></script>
-    <script src="bower_components/angular-youtube-mb/dist/angular-youtube-embed.min.js"></script>
-    <!--<script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <script src="bower_components/angular-translate/angular-translate.min.js"></script>
-    -->
-    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-    <script src="bower_components/wiz-markdown/wizMarkdown/wizMarkdown.min.js"></script>
 
     <script src="./services/sheet/SheetService.js"></script>
     <script src="./services/bus/MessageBus.js"></script>
@@ -54,11 +50,13 @@
     <script src="./directives/techRadar/techRadar.js"></script>
 
     <script src="./directives/slide/infoSlide.js"></script>
-    <script src="./directives/slide/slide.tpl.js"></script>
     <script src="./directives/slide/slideCtrl.js"></script>
     <script src="./directives/slide/slide.js"></script>
 
+    <script src="./directives/youtube/youtube.js"></script>
+
     <script src="./app/app.js"></script>
+    <script src="./includes/js/templates.js"></script>
     <!-- endbuild -->
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
