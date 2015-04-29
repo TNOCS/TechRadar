@@ -104,7 +104,7 @@ module App {
                       this.technologies.push(technology);
                   }
 
-                  if (row.ContentType === "") row.ContentType = "text";
+                  if (row.ContentType === "") row.ContentType = "markdown";
                   if (row.Content !== ""){
                       var c = new TechRadar.Content(page++, row.ContentType, row.Content, row.Subtitle);
                       if (c.contentType.toLowerCase() === "youtube") {

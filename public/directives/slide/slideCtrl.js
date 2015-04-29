@@ -41,6 +41,7 @@ var Slide;
                 return;
             }
             this.technology = technology;
+            this.activeContent = null;
             if (this.technology.content.length > 0) {
                 this.selectPage(0);
             }
