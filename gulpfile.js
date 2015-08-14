@@ -31,27 +31,33 @@ var gulp      = require('gulp'),
         .pipe(gulp.dest('public/includes/js'))
     })
 
-gulp.task('debug-built', function() {
+gulp.task('built-release', function() {
     var assets = useref.assets();
 
-    return gulp.src('./public/*.html')
-        .pipe(assets)
-        .pipe(assets.restore())
-        .pipe(useref())
+    gulp.src('./public/favicon.ico')
         .pipe(gulp.dest('dist'));
-});
 
-gulp.task('release-built', function() {
-    var assets = useref.assets();
+    gulp.src('./public/img/*.png')
+        .pipe(gulp.dest('dist/img'));
+
+    gulp.src('./public/directives/slide/slide.tpl.html')
+        .pipe(gulp.dest('dist/directives/slide'));
+
+    gulp.src('./public/bower_components/font-awesome/fonts/*.woff2')
+        .pipe(gulp.dest('dist/fonts'));
+
+    gulp.src('./public/includes/RO*.*')
+        .pipe(gulp.dest('dist/includes'));
 
     return gulp.src('./public/*.html')
         .pipe(assets)
-        .pipe(gulpif('*.js', uglify()))
+        //.pipe(gulpif('*.js', uglify())) // Most are minified already
         .pipe(gulpif('*.css', minifyCss()))
         .pipe(assets.restore())
         .pipe(useref())
         .pipe(gulp.dest('dist'));
 });
+
 
 gulp.task('run node', function (cb) {
   exec('node server.js', function (err, stdout, stderr) {
@@ -81,7 +87,7 @@ gulp.task('watch', function () {
     gulp.watch('./**/*.tpl.html', ['create_templateCache']);
 });
 
-gulp.task('default', ['create_templateCache', 'debug-built', 'watch']);
+gulp.task('default', ['create_templateCache', 'built-release', 'watch']);
 
 // // JS hint task
 // gulp.task('lint', function() {
