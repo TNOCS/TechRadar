@@ -1,7 +1,6 @@
 var Slide;
 (function (Slide) {
     var moduleName = 'techRadar.infoslide';
-    Slide.myModule;
     try {
         Slide.myModule = angular.module(moduleName);
     }

@@ -74,7 +74,7 @@
                 icon       : 'fa fa-info',
                 cornerclass: 'ui-pnotify-sharp',
                 addclass   : cssLocation,
-                stack      : { "dir1": dir1, "dir2": dir2, "firstpos1": 25, "firstpos2": 25 }
+				stack      : { "dir1": dir1, "dir2": dir2, "spacing1": 25, "spacing2": 25 }
             };
 
             var pn = new PNotify(options);
