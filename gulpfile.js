@@ -13,7 +13,23 @@ var gulp      = require('gulp'),
     order     = require('gulp-order'),
     gulpif    = require('gulp-if'),
     exec      = require('child_process').exec,
-    watch     = require('gulp-watch');
+    watch     = require('gulp-watch'),
+    templateCache = require('gulp-templateCache');
+
+    gulp.task('create_templateCache', function() {
+      console.log('Creating templateCache.')
+      var options = {
+        output: 'templates.js',
+        strip: 'public/',
+        //prepend: 'partials',
+        moduleName: 'TechRadar',
+        minify: {}
+      }
+
+      gulp.src('./**/*.tpl.html')
+        .pipe(templateCache(options))
+        .pipe(gulp.dest('public/includes/js'))
+    })
 
 gulp.task('debug-built', function() {
     var assets = useref.assets();
@@ -45,27 +61,27 @@ gulp.task('run node', function (cb) {
   });
 })
 
-gulp.task('convertTemplates2Ts', function() {
-    gulp.src('./src/**/*.tpl.html')
-        .pipe(plumber())
-        .pipe(cache('templates'))
-        .pipe(insert.prepend(function(file) {
-            var filename = file.path.substring(file.path.lastIndexOf('\\') + 1, file.path.lastIndexOf('.tpl.html'));
-            return 'module ' + filename + ' { export var html = \'';
-        }))
-        .pipe(insert.append('\'; }'))
-        .pipe(insert.transform(function(contents) {
-            return contents.replace(/(\r\n|\n|\r)/gm, "");
-        }))
-        .pipe(rename({ extname: '.ts' }))
-        .pipe(gulp.dest('./'));
-});
+// gulp.task('convertTemplates2Ts', function() {
+//     gulp.src('./**/*.tpl.html')
+//         .pipe(plumber())
+//         .pipe(cache('templates'))
+//         .pipe(insert.prepend(function(file) {
+//             var filename = file.path.substring(file.path.lastIndexOf('\\') + 1, file.path.lastIndexOf('.tpl.html'));
+//             return 'module ' + filename + ' { export var html = \'';
+//         }))
+//         .pipe(insert.append('\'; }'))
+//         .pipe(insert.transform(function(contents) {
+//             return contents.replace(/(\r\n|\n|\r)/gm, "");
+//         }))
+//         .pipe(rename({ extname: '.ts' }))
+//         .pipe(gulp.dest('./'));
+// });
 
 gulp.task('watch', function () {
-    gulp.watch('./**/*.tpl.html', ['convertTemplates2Ts']);
+    gulp.watch('./**/*.tpl.html', ['create_templateCache']);
 });
 
-gulp.task('default', ['convertTemplates2Ts', 'debug-built', 'watch']);
+gulp.task('default', ['create_templateCache', 'debug-built', 'watch']);
 
 // // JS hint task
 // gulp.task('lint', function() {

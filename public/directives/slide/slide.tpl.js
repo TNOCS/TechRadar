@@ -1,4 +1,0 @@
-var slide;
-(function (slide) {
-    slide.html = '<div class="slide">    <h1 class="center">{{vm.title}}</h1>    <h2 class="center">{{vm.subTitle}}</h2>    <p>        {{vm.text}}    </p>    <div class="col-md-12">        <img data-ng-if="vm.media" class="img-responsive" data-ng-src="{{vm.media}}" alt="{{vm.title}}" />    </div></div>';
-})(slide || (slide = {}));

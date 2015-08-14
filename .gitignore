@@ -27,7 +27,8 @@ build/Release
 node_modules
 public/bower_components
 public/**/*.js
+public/directives/**/*.js
 !public/includes/*
 dist
-
 Copy of 150304 Innovatielijst Def.xlsx
+public/includes/js/templates.js

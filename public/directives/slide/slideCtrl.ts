@@ -11,12 +11,16 @@ module Slide {
      */
     export class SlideCtrl {
         private scope     : ISlideScope;
-        private technology: Technology;
+        public technology: Technology;
+
+        public activeContent : TechRadar.Content;
 
         public title   : string;
         public subTitle: string;
         public text    : string;
         public media   : string;
+
+        public page : number;
 
         // $inject annotation.
         // It provides $injector with information about dependencies to be injected into constructor
@@ -39,14 +43,39 @@ module Slide {
                 if (title !== 'selected') return;
                 this.showSlide(technology);
             });
+
+            busService.subscribe('page', (action : string) => {
+                if (action === 'previous' && this.page>0) this.selectPage(this.page-1);
+                if (action === 'next' && this.technology.content.length-1>this.page) this.selectPage(this.page+1);5
+            });
+        }
+
+        public selectPage(id : number)
+        {
+          this.activeContent = null;5
+          if (!this.technology.content) return;
+          this.page = id;
+
+          this.technology.content.forEach((c)=>
+          {
+            c.isSelected = c.id === id;
+            if (c.isSelected) this.activeContent = c;
+          });
+          if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
         }
 
         private showSlide(technology: Technology) {
+
             if (!technology) {
                 console.log("ERROR: Technology is empty");
                 return;
             }
             this.technology = technology;
+            this.activeContent = null;
+            if (this.technology.content.length>0)
+            {
+              this.selectPage(0);
+            }
             if (!technology.title) {
                 console.log('Missing title:');
                 console.log(JSON.stringify(technology));
@@ -55,7 +84,7 @@ module Slide {
             this.title      = technology.title;
             this.subTitle   = technology.subTitle;
             this.text       = technology.text;
-            this.media      = technology.media;
+            //this.media      = technology.media;
             if (this.$scope.$root.$$phase != '$apply' && this.$scope.$root.$$phase != '$digest') { this.$scope.$apply(); }
         }
     }
