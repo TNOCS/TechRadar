@@ -11,7 +11,7 @@
                 <!-- <span>{{vm.activeContent.videoUrl}}</span> -->
             </div>
             <div style="background: black" ng-switch-when="image">
-                <img src="{{vm.activeContent.content}}" class="active-image" style="width:100%" />
+                <img ng-src="{{vm.activeContent.content}}" class="active-image" style="width:100%" />
             </div>
             <div ng-switch-when="markdown">
                 <wiz-markdown class="active-text" content="vm.activeContent.content"></wiz-markdown>
@@ -26,12 +26,12 @@
                     <span class="preview-icon fa fa-font fa-3"></span>
                 </div>
                 <div ng-switch-when="youtube">
-                    <img src="http://img.youtube.com/vi/{{c.content}}/0.jpg" ng-class="{'selected-image' : c.isSelected}" class="image-preview" />
+                    <img ng-src="http://img.youtube.com/vi/{{c.content}}/0.jpg" ng-class="{'selected-image' : c.isSelected}" class="image-preview" />
                     <span class="preview-icon fa fa-play fa-3"></span>
                     <!-- <object data="{{c.content}}?autoplay=1" width="100%" height="100%"></object> -->
                 </div>
                 <div ng-switch-when="image">
-                    <img src="{{c.content}}" ng-class="{'selected-image' : c.isSelected}" class="image-preview" alt="{{vm.title}}" />
+                    <img ng-src="{{c.content}}" ng-class="{'selected-image' : c.isSelected}" class="image-preview" alt="{{vm.title}}" />
                     <span class="preview-icon fa fa-image fa-3"></span>
                 </div>
                 <div ng-switch-when="markdown">
