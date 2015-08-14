@@ -1,0 +1,106 @@
+<html ng-app="TechRadar">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="A technology radar linked to a public Google spreadsheet for easy editing.">
+        <meta name="author" content="Erik Vullings">
+        <link rel="icon" href="../../favicon.ico">
+
+        <title>Technology Radar</title>
+
+        <link rel="stylesheet" href="css/techradar.css">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body data-ng-controller="appCtrl" data-ng-cloak>
+    <!-- <script src="https://www.youtube.com/iframe_api"></script> -->
+    <script src="techradar.js"></script>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">Technology Radar</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+              </ul>
+
+            <!-- Filter technologies that are shown -->
+            <form class="navbar-form navbar-right" style="margin-right:0" role="search" class="pull-right">
+                  <div id="scrollable-dropdown-menu" class="form-group has-feedback navbar-right">
+                      <input data-ng-model="searchText"
+                             id="searchbox"
+                             type="text"
+                             class="form-control">
+                     <span id="searchicon" class="fa fa-filter form-control-feedback" style="margin-top: 0.65em"></span>
+                  </div>
+              </form>
+
+              <!-- Specify priority level -->
+              <div ng-init="tech.priority = 5" style="margin-top: 6px; color: white; text-align: right; text-align: -webkit-right;" class="pull-right">
+                  <div data-ng-switch="tech.priority">
+                      <b data-ng-switch-when="1">Priority: high </b>
+                      <b data-ng-switch-when="2">Priority: medium-high</b>
+                      <b data-ng-switch-when="3">Priority: medium</b>
+                      <b data-ng-switch-when="4">Priority: low-medium</b>
+                      <b data-ng-switch-when="5">Priority: show all</b>
+                  </div>
+
+                  <rating ng-model="tech.priority" max="5" state-on="'fa fa-dot-circle-o'" state-off="'fa fa-circle-o'"></rating>
+              </div>
+
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+
+        <style>
+          .focus-opacity
+          {
+            opacity:1;
+          }
+        </style>
+
+        <div class="technology-list-container">
+          <ul class="ts" id="tslist" >
+          <li data-ng-repeat="t in vm.technologies | priorityFilter:tech.priority | filter: searchText | orderBy : 'id'" ng-click="vm.focus(t)" id="tech-{{t.id}}">
+            <div class="ts-item" ng-class="{'focus-opacity' :  t.focus}"  style="background:{{t.color}}">
+            <div class="list-id">{{t.id}}</div>
+            <div class="list-title">{{t.title.trunc(44)}}</div>
+          </div>
+          </li>
+
+        </ul>
+
+        </div>
+
+        <div class="container-fluid" style="padding: 0 0 0 0">
+
+          <div class="col-md-6" style="width:45%">
+              <tech-radar-chart technologies="vm.technologies" searchterm="searchText" prioritylevel="tech.priority" options="vm.options" startangle="-90" endangle="270"></tech-radar-chart>
+          </div>
+
+          <div class="col-md-6" style="background:#bdbdbd;margin:0;width:55%;height:100%;padding:0">
+              <infoSlide></infoSlide>
+          </div>
+
+        </div><!-- /.container -->
+
+    </body>
+</html>

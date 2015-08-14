@@ -1,0 +1,56 @@
+<div class="slide">
+    <div class="active-content">
+        <div data-ng-switch="vm.activeContent.contentType">
+            <div ng-switch-when="text">
+                <span class="active-text">{{vm.activeContent.content}}</span>
+            </div>
+            <div ng-switch-when="youtube">
+                <!-- <iframe id="ytplayer" type="text/html" width="640" height="390" src="{{c.videoUrl}}" frameborder="0"/> -->
+                <!-- <iframe src="{{vm.activeContent.videoUrl}}" frameborder="0" style="width:100%;height:100%"></iframe> -->
+                <youtube url="vm.activeContent.videoUrl" />
+                <!-- <span>{{vm.activeContent.videoUrl}}</span> -->
+            </div>
+            <div style="background: black" ng-switch-when="image">
+                <img ng-src="{{vm.activeContent.content}}" class="active-image" style="width:100%" />
+            </div>
+            <div ng-switch-when="markdown">
+                <wiz-markdown class="active-text" content="vm.activeContent.content"></wiz-markdown>
+            </div>
+        </div>
+    </div>
+
+    <ul class="content-list">
+        <li data-ng-repeat="c in vm.technology.content">
+            <div ng-switch="c.contentType" class="content-preview" ng-class="{'selected-content' : c.isSelected}" data-ng-click="vm.selectPage(c.id)">
+                <div ng-switch-when="text">
+                    <span class="preview-icon fa fa-font fa-3"></span>
+                </div>
+                <div ng-switch-when="youtube">
+                    <img ng-src="http://img.youtube.com/vi/{{c.content}}/0.jpg" ng-class="{'selected-image' : c.isSelected}" class="image-preview" />
+                    <span class="preview-icon fa fa-play fa-3"></span>
+                    <!-- <object data="{{c.content}}?autoplay=1" width="100%" height="100%"></object> -->
+                </div>
+                <div ng-switch-when="image">
+                    <img ng-src="{{c.content}}" ng-class="{'selected-image' : c.isSelected}" class="image-preview" alt="{{vm.title}}" />
+                    <span class="preview-icon fa fa-image fa-3"></span>
+                </div>
+                <div ng-switch-when="markdown">
+                    <span class="preview-icon fa fa-font fa-3"></span>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <div class="slide-title">
+        {{vm.technology.title}}
+    </div>
+
+    <div ng-show="vm.activeContent.subTitle" class="slide-subtitle">
+        {{vm.activeContent.subTitle}}
+    </div>
+
+    </ul>
+    <p>
+        {{vm.text}}
+    </p>
+</div>
