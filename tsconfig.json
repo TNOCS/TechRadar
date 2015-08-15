@@ -20,7 +20,6 @@
         "./Scripts/typings/node/node.d.ts",
         "./Scripts/typings/pnotify/jquery.pnotify.d.ts",
         "./public/app/app.ts",
-        "./public/directives/slide/infoSlide.ts",
         "./public/directives/slide/slide.ts",
         "./public/directives/slide/slideCtrl.ts",
         "./public/directives/techRadar/FontAwesomeConverter.ts",

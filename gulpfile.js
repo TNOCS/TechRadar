@@ -1,35 +1,32 @@
 // http://andy-carter.com/blog/a-beginners-guide-to-the-task-runner-gulp
 // http://www.smashingmagazine.com/2014/06/11/building-with-gulp/
 
-var gulp      = require('gulp'),
-    insert    = require('gulp-insert'),
-    uglify    = require('gulp-uglify'),
+var gulp = require('gulp'),
+    insert = require('gulp-insert'),
+    uglify = require('gulp-uglify'),
     minifyCss = require('gulp-cssmin'),
-    rename    = require('gulp-rename'),
-    cache     = require('gulp-cached'),
-    concat    = require('gulp-concat'),
-    plumber   = require('gulp-plumber'),
-    useref    = require('gulp-useref'),
-    order     = require('gulp-order'),
-    gulpif    = require('gulp-if'),
-    exec      = require('child_process').exec,
-    watch     = require('gulp-watch'),
-    templateCache = require('gulp-templateCache');
+    rename = require('gulp-rename'),
+    cache = require('gulp-cached'),
+    concat = require('gulp-concat'),
+    plumber = require('gulp-plumber'),
+    useref = require('gulp-useref'),
+    order = require('gulp-order'),
+    gulpif = require('gulp-if'),
+    exec = require('child_process').exec,
+    watch = require('gulp-watch'),
+    templateCache = require('gulp-angular-templateCache');
 
-    gulp.task('create_templateCache', function() {
-      console.log('Creating templateCache.')
-      var options = {
+gulp.task('create_templateCache', function() {
+    console.log('Creating templateCache.')
+    var options = {
         output: 'templates.js',
-        strip: 'public/',
-        //prepend: 'partials',
-        moduleName: 'TechRadar',
-        minify: {}
-      }
+        module: 'TechRadar'
+    }
 
-      gulp.src('./**/*.tpl.html')
+    gulp.src('./public/**/*.tpl.html')
         .pipe(templateCache(options))
         .pipe(gulp.dest('public/includes/js'))
-    })
+})
 
 gulp.task('built-release', function() {
     var assets = useref.assets();
@@ -43,7 +40,7 @@ gulp.task('built-release', function() {
     gulp.src('./public/directives/slide/slide.tpl.html')
         .pipe(gulp.dest('dist/directives/slide'));
 
-    gulp.src('./public/bower_components/font-awesome/fonts/*.woff2')
+    gulp.src('./public/bower_components/font-awesome/fonts/*.*')
         .pipe(gulp.dest('dist/fonts'));
 
     gulp.src('./public/includes/RO*.*')
@@ -59,12 +56,12 @@ gulp.task('built-release', function() {
 });
 
 
-gulp.task('run node', function (cb) {
-  exec('node server.js', function (err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
-    cb(err);
-  });
+gulp.task('run node', function(cb) {
+    exec('node server.js', function(err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
 })
 
 // gulp.task('convertTemplates2Ts', function() {
@@ -83,7 +80,7 @@ gulp.task('run node', function (cb) {
 //         .pipe(gulp.dest('./'));
 // });
 
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     gulp.watch('./**/*.tpl.html', ['create_templateCache']);
 });
 
