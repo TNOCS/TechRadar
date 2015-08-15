@@ -1,6 +1,6 @@
 [![Stories in Ready](https://badge.waffle.io/tnocs/techradar.png?label=ready&title=Ready)](https://waffle.io/tnocs/techradar)
 # TechRadar
-A technology radar that uses a [Google Sheet](https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true) as input. 
+A technology radar that uses a [Google Sheet](https://docs.google.com/spreadsheets/d/1Q21QWlx3GqKjaLLwaq5fJb0eFwXouDMjk_cdideCHMk/pubhtml?gid=1695252245&single=true) as input. [LIVE DEMO](http://tnocs.github.io/TechRadar/)
 
 ![Screenshot](http://i.imgur.com/qFzwPBC.png)
 
