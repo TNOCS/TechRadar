@@ -23,6 +23,7 @@ html, body, #map {
 }
 html, body, #container {
     height: 100%;
+    margin: 0;
     overflow: hidden;
     width: 100%;
 }
@@ -211,6 +212,9 @@ body {
 }
 
 .active-text {
+    height: 45vh;
+    width: 70vh;
+    overflow-y: auto;
     margin-left: 80px;
     font-size: 30px;
     color: black;
@@ -220,6 +224,7 @@ body {
 }
 
 .active-image {
+    margin-top: 50px;
     top: 0;
     bottom: 0;
     left: 0;
@@ -234,8 +239,69 @@ body {
     position: absolute;
     top: 20px;
     font-size: 40px;
-    right: 33px;
-    top: 30px;
+    right: 27px;
+    top: 25px;
 }
 
 /* End slide style */
+
+.focus-opacity {
+    opacity: 1;
+}
+
+/*.col-md-6:not(:first-child,:last-child) {
+    padding-left:25px;
+    padding-right:35px;
+}*/
+
+.truncate {
+    /*width: 250px;*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.edit-container .edit {
+    color: transparent;
+}
+.edit-container:hover .edit {
+    color: white;
+    cursor: pointer;
+}
+.navbar-brand {
+    color: white;
+    font-weight: bold;
+}
+#wrapper {
+    min-height: 100%;
+}
+#content {
+    /*overflow: hidden;*/
+    padding-bottom: 30px;
+}
+#footer {
+    position: relative;
+    margin-top: -50px;
+    height: 50px;
+    clear: both;
+}
+#searchbox {
+    width: 100px;
+}
+textarea {
+    overflow: hidden;
+}
+.dropbox{
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    width: 370px;
+    height: 105px;
+    text-align: center;
+    padding-top: 25px;
+    margin: 10px;
+}
+.dragover {
+    border: 5px dashed blue;
+}
+.tree li ul > li {
+    display: none;
+}
