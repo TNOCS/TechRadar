@@ -18,7 +18,7 @@ module App {
             '$scope',
             'busService',
             'sheetService'
-        ];
+        ]; 
 
         // dependencies are injected via AngularJS $injector
         // controller's name is registered in Application.ts and specified from ng-controller attribute in index.html
@@ -71,29 +71,8 @@ module App {
                 .otherwise({
                     redirectTo: '/home'
                 });
-            // configure html5 to get links working on jsfiddle
-            // $locationProvider.html5Mode({
-            //     enabled: true,
-            //     requireBase: false
-            // });
-        })
-
-        // .config(($stateProvider, $urlRouterProvider) => {
-        //     // For any unmatched url, send to /
-        //     $urlRouterProvider.otherwise("/map");
-        //     $stateProvider
-        //         .state('map', {
-        //             url: "/map?layers",
-        //             templateUrl: "views/map/map.html",
-        //             sticky: true,
-        //             deepStateRedirect: true
-        //         })
-        //         .state('table', {
-        //             url: "/table",
-        //             template: "<datatable id='datatable'></datatable>",
-        //             sticky: true
-        //         });
-        // })
+          
+        })        
         .service('sheetService', csComp.Services.SpreadsheetService)
         .service('busService', csComp.Services.MessageBusService)
         .controller('appCtrl', AppCtrl)

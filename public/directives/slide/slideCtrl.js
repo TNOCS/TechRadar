@@ -62,6 +62,6 @@ var Slide;
             'busService'
         ];
         return SlideCtrl;
-    })();
+    }());
     Slide.SlideCtrl = SlideCtrl;
 })(Slide || (Slide = {}));

@@ -70,7 +70,7 @@ var csComp;
                 });
             };
             return SpreadsheetService;
-        })();
+        }());
         Services.SpreadsheetService = SpreadsheetService;
     })(Services = csComp.Services || (csComp.Services = {}));
 })(csComp || (csComp = {}));

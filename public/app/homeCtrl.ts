@@ -3,7 +3,7 @@ module App {
     import Technology      = TechRadar.Technology;
 
     export interface IHomeScope extends ng.IScope {
-        vm: HomeCtrl;
+        vm: HomeCtrl;        
     }
 
     export class HomeCtrl {
@@ -32,7 +32,7 @@ module App {
             private spreadsheetService : csComp.Services.SpreadsheetService
             ) {
             $scope.vm = this;
-
+            
             this.options = { prio : { 1 : true, 2: true, 3:false} };
             busService.subscribe('technology', (action: string, t: Technology) => {
                 switch (action) {
@@ -49,7 +49,8 @@ module App {
 
             this.reload();
         }
-
+        
+        /** reload new technologies */
         private reload() {
             this.technologies = this.spreadsheetService.technologies;
             if (!this.technologies || this.technologies.length === 0) return;

@@ -6,7 +6,7 @@ var FontAwesomeUtils;
             this.fontSize = "1em";
         }
         return FontAwesomeConversionResult;
-    })();
+    }());
     FontAwesomeUtils.FontAwesomeConversionResult = FontAwesomeConversionResult;
     var FontAwesomeConverter = (function () {
         function FontAwesomeConverter() {
@@ -651,6 +651,6 @@ var FontAwesomeUtils;
             }
         };
         return FontAwesomeConverter;
-    })();
+    }());
     FontAwesomeUtils.FontAwesomeConverter = FontAwesomeConverter;
 })(FontAwesomeUtils || (FontAwesomeUtils = {}));

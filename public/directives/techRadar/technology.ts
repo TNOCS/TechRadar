@@ -13,10 +13,13 @@ module TechRadar {
        public subTitle    : string
 
        ){
+         
+         
 
      }
    }
 
+    /** description of a technology  */
     export class Technology {
 
        public content       : Content[] = [];
