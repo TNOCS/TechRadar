@@ -11,25 +11,5 @@
     "filesGlob": [
         "./**/*.ts",
         "!./node_modules/**/*.ts"
-    ],
-    "files": [
-        "./Scripts/typings/angularjs/angular.d.ts",
-        "./Scripts/typings/angularjs/angular-route.d.ts",
-        "./Scripts/typings/d3/d3.d.ts",
-        "./Scripts/typings/express/express.d.ts",
-        "./Scripts/typings/jquery/jquery.d.ts",
-        "./Scripts/typings/node/node.d.ts",
-        "./Scripts/typings/pnotify/jquery.pnotify.d.ts",
-        "./public/app/app.ts",
-        "./public/app/homeCtrl.ts",
-        "./public/directives/slide/slide.ts",
-        "./public/directives/slide/slideCtrl.ts",
-        "./public/directives/techRadar/FontAwesomeConverter.ts",
-        "./public/directives/techRadar/techRadar.ts",
-        "./public/directives/techRadar/technology.ts",
-        "./public/directives/youtube/youtube.ts",
-        "./public/services/bus/MessageBus.ts",
-        "./public/services/sheet/SheetService.ts",
-        "./server.ts"
     ]
 }

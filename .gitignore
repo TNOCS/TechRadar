@@ -32,3 +32,4 @@ public/directives/**/*.js
 dist
 Copy of 150304 Innovatielijst Def.xlsx
 public/includes/js/templates.js
+.vscode/ftp-sync.json

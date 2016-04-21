@@ -3,7 +3,7 @@ module csComp.Services {
 
     export  interface ISpreadsheetRow {
         Category:      string;
-        Priority:      number;
+        Relevance:      number;
         Thumbnail:     string;
         TimeCategory:  string;
         DeltaTime:     string | number;
@@ -33,10 +33,10 @@ module csComp.Services {
                     // check if it's part of previous
                     if (row.Category !== '') {
 
-                        //console.log(row.Category);
+                        //console.log(row.Category); 
                         //console.log(row.Title);
                         var deltaTimeString = row.DeltaTime;
-                        var priority = parseInt(row.Priority.toString(), 10);
+                        var priority = parseInt(row.Relevance.toString(), 10);
                         var color;
                         switch (priority) {
                             case 1: color = '#F39092'; break;

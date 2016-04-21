@@ -2,6 +2,11 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="cache-control" content="max-age=0" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+<meta http-equiv="pragma" content="no-cache" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <meta name="description" content="A technology radar linked to a public Google spreadsheet for easy editing.">
@@ -57,25 +62,25 @@
 
     <script src="./app/homeCtrl.js"></script>
     <script src="./app/app.js"></script>
-    <script src="./includes/js/templates.js"></script>
+    <!--<script src="./includes/js/templates.js"></script>-->
     <!-- endbuild -->
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
         <nav class="navbar navbar-inverse navbar-fixed-top">
           <div class="container">
-            <div class="navbar-header" style="margin-top:-6px" data-toggle="tooltip" data-placement="bottom" title="TNO's open source Technology Radar">
-                <a class="navbar-brand" target="_blank" href="http://www.tno.nl">
+            <div class="navbar-header" style="margin-top:-6px" data-toggle="tooltip" data-placement="bottom" title="MAKE-IT Technology Radar">
+                <a class="navbar-brand" target="_blank" href="http://make-it.io/">
                     <span>
-                        <img src="img/TNO White.png" alt="Technology Radar" width="88" height="32" />&nbsp;&nbsp;Technology Radar
-                    </span>
+                        <img src="img/logoblank.png" alt="Technology Radar" width="88" height="32" />&nbsp;&nbsp;Technology Radar
+                    </span> 
                 </a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
                 <li ng-class="{active: vm.$route.current.activetab == 'home'}"><a href="#/home">Home</a></li>
                 <li ng-class="{active: vm.$route.current.activetab == 'about'}"><a href="#/about">About</a></li>
-                <li ng-class="{active: vm.$route.current.activetab == 'contact'}"><a href="#/contact">Contact</a></li>
+                <!--<li ng-class="{active: vm.$route.current.activetab == 'contact'}"><a href="#/contact">Contact</a></li>-->
               </ul>
 
             <!-- Filter technologies that are shown -->
@@ -92,11 +97,11 @@
               <!-- Specify priority level -->
               <div ng-init="tech.priority = 5" style="margin-top: 6px; color: white; text-align: right; text-align: -webkit-right;" class="pull-right">
                   <div data-ng-switch="tech.priority">
-                      <b data-ng-switch-when="1">Priority: high </b>
-                      <b data-ng-switch-when="2">Priority: medium-high</b>
-                      <b data-ng-switch-when="3">Priority: medium</b>
-                      <b data-ng-switch-when="4">Priority: low-medium</b>
-                      <b data-ng-switch-when="5">Priority: show all</b>
+                      <b data-ng-switch-when="1">Relevance: high </b>
+                      <b data-ng-switch-when="2">Relevance: medium-high</b>
+                      <b data-ng-switch-when="3">Relevance: medium</b>
+                      <b data-ng-switch-when="4">Relevance: low-medium</b>
+                      <b data-ng-switch-when="5">Relevance: show all</b>
                   </div>
 
                   <rating ng-model="tech.priority" max="5" state-on="'fa fa-dot-circle-o'" state-off="'fa fa-circle-o'"></rating>

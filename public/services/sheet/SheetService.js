@@ -15,7 +15,7 @@ var csComp;
                     spreadsheet.forEach(function (row) {
                         if (row.Category !== '') {
                             var deltaTimeString = row.DeltaTime;
-                            var priority = parseInt(row.Priority.toString(), 10);
+                            var priority = parseInt(row.Relevance.toString(), 10);
                             var color;
                             switch (priority) {
                                 case 1:
